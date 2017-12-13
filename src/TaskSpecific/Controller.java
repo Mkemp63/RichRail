@@ -25,7 +25,21 @@ public class Controller implements Observable {
 		return instance;
 	}
 
-	public boolean trainNotEquals(String name){
+	public void addTrain(String name) {
+		if(trainExist(name)){
+			Train t = new Train(name);
+
+			logs.add("Train "+name+" build");
+			trains.add(t);
+			notifyObservers();
+		}
+		else{
+			logs.add("Train "+name+" has not been build");
+			notifyObservers();
+		}
+	}
+
+	public boolean trainExist(String name){
 		for(Train t: trains){
 			if(t.getName().equals(name)){
 				return false;		
@@ -33,7 +47,30 @@ public class Controller implements Observable {
 		}return true;
 	}
 
-	public boolean wagonNotEquals(int id){
+	public void addWagon(int id, int seats){
+		boolean wagonExists = true;
+		boolean wagonIDExists = false;
+		for(Wagon w : wagons ){ 
+			if (id == w.getID()){
+				wagonIDExists = true;
+			}
+		}
+
+		if(wagonIDExists == false ){
+			wagonExists = false;
+			Wagon wagon = new Wagon(id, seats);
+			wagons.add(wagon);
+			logs.add("Wagon "+id+" build with "+seats+" seathingplaces");
+			notifyObservers();
+		}
+
+		if(wagonExists) {
+			logs.add("Wagon "+id+" not build, it already exist");
+			notifyObservers();
+		}
+	}
+
+	public boolean wagonExist(int id){
 		ArrayList<Wagon> WagonList = wagons;
 		for(Wagon w: WagonList){
 			if(w.getID()==id){
@@ -56,11 +93,11 @@ public class Controller implements Observable {
 	}
 
 	public void linkWagon(String train, int wagon){
-		if(trainNotEquals(train)){
+		if(trainExist(train)){
 			logs.add("train does not exist.");
 			notifyObservers();
 		}
-		if(wagonNotEquals(wagon)){
+		if(wagonExist(wagon)){
 			logs.add("Wagon doet not exist.");
 			notifyObservers();
 		}
@@ -83,41 +120,121 @@ public class Controller implements Observable {
 		}
 	}
 
-	public void unlinkWagon(String train, int wagon){
-		if(trainNotEquals(train)){
+	public void getSeatsFromWagon(int wagon){
+		if(wagonExist(wagon)){
+			logs.add("Wagon does not exist");
+			notifyObservers();
+		}
+		ArrayList<Wagon> WagonList = wagons;
+		for(Wagon w: WagonList){
+			if(w.getID()==wagon){
+				logs.add("Number of seats in wagon "+wagon+":"+w.getSeats());
+				notifyObservers();
+			}
+		}
+	}
+
+	public void getSeats(String train){
+		if(trainExist(train)){
 			logs.add("Train does not exist");
 			notifyObservers();
 		}
-		if(wagonNotEquals(wagon)){
+		int seats = 0;
+		ArrayList<Train> Trainlist = trains;
+		ArrayList<Wagon> WagonList = null;
+		for(Train t: Trainlist){
+			if(t.getName().equals(train)){
+				WagonList = t.getWagons();
+			}
+		}
+		for(Wagon w: WagonList){
+			seats = seats + w.getSeats();
+		}
+		logs.add("Number of seats in train "+train+":"+seats);
+		notifyObservers();
+	}
+
+	public void deleteWagon(int wagon){
+		boolean b = false;
+		if(wagonExist(wagon)){
+			logs.add("Wagon does not exist");
+			notifyObservers();
+			b = true;
+		}
+		if(!b){
+			for(Wagon w: wagons){
+				if(w.getID()==wagon){
+					wagons.remove(w);
+					for(Train t: trains){
+						t.removeWagon(w);
+						logs.add("Wagon "+wagon+" deleted");
+						notifyObservers();
+					}
+
+				}
+			}
+		}
+	}
+	
+	public void deleteTrain(String train){
+		boolean b = false;
+		if(trainExist(train)){
+			logs.add("Train does not exist");
+			notifyObservers();
+			b = true;
+		}
+		if(!b){
+			Train tr = new Train();
+			for(Train t: trains){
+				if(t.getName().equals(train)){
+
+					tr = t;
+
+				}
+			}
+			logs.add("Train "+train+" deleted");
+			trains.remove(tr);
+			notifyObservers();
+		}
+	}
+
+	public void unlinkWagon(String train, int wagon){
+		if(trainExist(train)){
+			logs.add("Train does not exist");
+			notifyObservers();
+		}
+		if(wagonExist(wagon)){
 			logs.add("Wagon does not exist");
 			notifyObservers();
 		}
 		boolean b = false;
 		for(Train t: trains){
 			if(t.getName().equals(train)){
-				for(Wagon w: t.getWagons()){
-					if(w.getID()==wagon){
-						b = true;
-						t.removeWagon(w);
-						logs.add("Wagon "+wagon+" unlinked from train "+ train);
-						notifyObservers();
+					for(Wagon w: t.getWagons()){
+						if(w.getID()==wagon){
+							b = true;
+							t.removeWagon(w);
+							logs.add("Wagon "+wagon+" unlinked from train "+ train);
+							notifyObservers();
+						}
 					}
 				}
 			}
-		}
 		if(!b){
 			logs.add("Wagon "+wagon+" not unlinked from train "+ train);
 			notifyObservers();
 		}
-	}
-
-	public void notifyObservers() {
+		}
+	
+	private void notifyObservers() {
 		Iterator<Observer> oi = observers.iterator();
 		while( oi.hasNext() ) {
 			Observer ob = (Observer) oi.next();
 			ob.update( this );
 		}
 	}
+
+
 
 	public void addLogger(Logger logger) {
 
@@ -137,15 +254,17 @@ public class Controller implements Observable {
 	public void setWriters(ArrayList<Logger> loggers) {
 		this.loggers = loggers;
 	}
-
+	
 	@Override
 	public void addObserver(Observer o) {
+		// TODO Auto-generated method stub
 		observers.add(o);
 	}
 
 	@Override
 	public void removeObserver(Observer o) {
+		// TODO Auto-generated method stub
 		observers.remove(o);
 	}
-
+	
 }

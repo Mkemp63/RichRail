@@ -30,8 +30,8 @@ public class Train {
 	public void addWagon(Wagon w){
 		Wagons.add(w);
 	}
-	public void removeWagon(Wagon w){
-		Wagons.remove(w);
+	public boolean removeWagon(Wagon w){
+		return Wagons.remove(w);
 	}
 	
 }
