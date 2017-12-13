@@ -10,6 +10,6 @@ public abstract class Action {
 	public TrainController tcont = TrainController.getInstance();
 	public WagonController wcont = WagonController.getInstance();
 
-	public abstract void useAction();
+	public abstract void useAction(String train);
 	
 }

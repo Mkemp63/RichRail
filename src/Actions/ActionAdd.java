@@ -5,7 +5,7 @@ public class ActionAdd extends Action {
 	private int idWagon;
 	
 	@Override
-	public void useAction() {
+	public void useAction(String train) {
 		
 		cont.linkWagon(nameTrain, idWagon);
 		
