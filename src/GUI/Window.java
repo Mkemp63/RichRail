@@ -3,6 +3,7 @@ package GUI;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -18,15 +19,21 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.WindowConstants;
 import javax.swing.border.BevelBorder;
 
-
+import TaskSpecific.Controller;
+import Actions.*;
 
 public class Window extends javax.swing.JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
+	
+	private Controller controller;
+	private ActionAdd actionAdd;
 	
 	private JPanel jPanel1;
 	private JTextPane tpTextTrain;
@@ -45,6 +52,14 @@ public class Window extends javax.swing.JFrame implements ActionListener {
 	private JTextField tfNewTrain;
 	private JPanel jPanel2;
 	private JPanel drawPanel;
+	
+	private JPanel jPanel3;
+	private JPanel jPanel4;
+	private JTextPane tpCommandInput;
+	private JTextField tfCommandLine;
+	private JTextArea taOverview;
+	private JTextArea taOutput;
+	private JButton btnExecute;
 	
 	private HashMap numberOfWagons;
 	private int currentNumberOfWagons;
@@ -66,6 +81,76 @@ public class Window extends javax.swing.JFrame implements ActionListener {
 		setSize(800, 600);
 		initGUI();
 		
+	}
+	
+	private void initCLIGUI() {
+		try 
+		{
+			this.setTitle("RichRail | Command Line");
+			GridBagLayout thisLayout = new GridBagLayout();
+			setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+			thisLayout.rowWeights = new double[] {0.1, 0.1, 0.1, 0.1};
+			thisLayout.rowHeights = new int[] {7, 7, 7, 7};
+			thisLayout.columnWeights = new double[] {0.1, 0.1, 0.1, 0.1};
+			thisLayout.columnWidths = new int[] {7, 7, 7, 7};
+			getContentPane().setLayout(thisLayout);
+			{
+				jPanel3 = new JPanel();
+				jPanel3.setLayout(new BorderLayout());
+				getContentPane().add(jPanel3, new GridBagConstraints(0, 0, 4, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+				{
+					drawPanel = new JPanel();
+					drawPanel.setBackground(Color.WHITE);
+					jPanel3.add(drawPanel,BorderLayout.CENTER);
+				}
+			}
+			{
+				jPanel4 = new JPanel();
+				GridBagLayout jPanel4Layout = new GridBagLayout();
+				//jPanel4.setLayout(null);
+				jPanel4.setLayout(jPanel4Layout);
+				getContentPane().add(jPanel4, new GridBagConstraints(0, 1, 1, 3, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+				{
+					taOverview = new JTextArea ();
+					taOverview.setPreferredSize(new Dimension(400, 200));
+					taOverview.setBackground(Color.WHITE);
+					taOverview.setForeground(Color.black);
+					taOverview.setEditable(false);
+					taOverview.setText("Dit is de overview area");
+					taOverview.setSize(400, 200);
+					taOverview.setVisible(true);
+					taOverview.setLineWrap(true);
+					JScrollPane scrollpane = new JScrollPane(taOverview);
+					jPanel4.add(scrollpane, new GridBagConstraints(0, 0, 0, 0, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+				}				
+				{
+					tfCommandLine = new JTextField(20);
+					jPanel4.add(tfCommandLine, new GridBagConstraints(1, 0, 1, 3, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+				}
+				{
+					btnExecute = new JButton();
+					jPanel4.add(btnExecute, new GridBagConstraints(2, 0, 1, 3, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+					btnExecute.setText("Execute command");
+					btnExecute.addActionListener(this);
+				}
+				{
+					tpCommandInput = new JTextPane();
+					jPanel4.add(tpCommandInput, new GridBagConstraints(0, 0, 1, 3, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+					jPanel4.setBounds(10, 10, 100, 15);
+					jPanel4Layout.rowWeights = new double[] {0.1, 0.1, 0.1, 0.1};
+					jPanel4Layout.rowHeights = new int[] {7, 7, 7, 7};
+					jPanel4Layout.columnWeights = new double[] {0.1, 0.1, 0.1, 0.1};
+					jPanel4Layout.columnWidths = new int[] {7, 7, 7, 7};
+					tpCommandInput.setText("Command input: ");
+				}
+			}
+			pack();
+			setSize(800, 600);
+			numberOfWagons = new HashMap();
+		} catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	private void initGUI() {
@@ -218,6 +303,10 @@ public class Window extends javax.swing.JFrame implements ActionListener {
 //				currentTrain = cbAllTrains.getSelectedIndex();
 //				drawTrain(train);
 //			}
+			
+			if(controller.trainNotEquals(train) == false) {
+//				actionAdd.useAction(train);
+			}
 		
 		}
 		else if (event.getSource() == btnChooseTrain)
