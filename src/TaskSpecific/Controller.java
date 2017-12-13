@@ -58,14 +58,6 @@ public class Controller implements Observable {
 
 	public void linkWagon(String train, int wagon){
 		System.out.println("Naam "+ train + " en id checken =" + wagon);
-		if(trainNotEquals(train)){
-			System.out.println("train does not exist.");
-			notifyObservers();
-		}
-		if(wagonNotEquals(wagon)){
-			System.out.println("Wagon doet not exist.");
-			notifyObservers();
-		}
 
 		for(Train t: trains){
 			if(t.getName().equals(train)){
@@ -76,15 +68,24 @@ public class Controller implements Observable {
 							logs.add("Wagon "+wagon+" linked to train "+ train);
 							System.out.println("Wagon "+wagon+" linked to train "+ train);
 							notifyObservers();
-						}else{
+						}else {
 							System.out.println("Wagon is already in linked to another train.");
 							logs.add("Wagon is already in linked to another train.");
 							notifyObservers();
 						}
-					}		
+					}else {
+						System.out.println("Wagon doet not exist.");
+						logs.add("Wagon doet not exist.");
+						notifyObservers();
+					}
 				}
+			}else {
+				System.out.println("train does not exist.");
+				logs.add("train does not exist.");
+				notifyObservers();
 			}
-		}	
+
+		}
 	}
 
 	public void unlinkWagon(String train, int wagon){

@@ -115,7 +115,7 @@ public class Window extends javax.swing.JFrame implements ActionListener {
 				{
 					btnNewTrain = new JButton();
 					jPanel2.add(btnNewTrain, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-					btnNewTrain.setText("make new train");
+					btnNewTrain.setText("execute");
 					btnNewTrain.addActionListener(this);
 				}
 				{
