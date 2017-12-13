@@ -20,6 +20,7 @@ public class TrainController extends Controller{
 			Train t = new Train(name);
 
 			logs.add("Train "+name+" build");
+			System.out.println("Train "+name+" build");
 			trains.add(t);
 			notifyObservers();
 		}

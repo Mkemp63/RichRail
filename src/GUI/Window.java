@@ -17,11 +17,14 @@ import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.WindowConstants;
 import javax.swing.border.BevelBorder;
+
+import Actions.*;
 
 
 
@@ -204,9 +207,46 @@ public class Window extends javax.swing.JFrame implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent event) {
+		Action cmdAdd = new ActionAdd();
+		Action cmdDelete = new ActionDelete();
+		Action cmdRemove = new ActionRemove();
+		Action cmdNew = new ActionNew();
+		Action cmdGet = new ActionGet();
+		int firstInstanceOfSpaces;
+		
 		if (event.getSource()== btnNewTrain)
 		{
-			String train = tfNewTrain.getText();
+			
+			String inputCommand = tfNewTrain.getText();
+			 
+			firstInstanceOfSpaces = inputCommand.indexOf(" ", 0);
+			if(firstInstanceOfSpaces >= 0){//kijken of wel een spatie inzit om het eerste woord er uit te halen
+				if (inputCommand.substring(0, firstInstanceOfSpaces).equals("new")){
+					cmdNew.useAction(inputCommand);
+				}
+				else if(inputCommand.substring(0, firstInstanceOfSpaces).equals("add")){
+					cmdAdd.useAction(inputCommand);
+				}
+				else if(inputCommand.substring(0, firstInstanceOfSpaces).equals("delete")){
+					cmdDelete.useAction(inputCommand);
+				}
+				else if(inputCommand.substring(0, firstInstanceOfSpaces).equals("getnumseats")){
+					cmdGet.useAction(inputCommand);
+				}
+				else if(inputCommand.substring(0, firstInstanceOfSpaces).equals("remove")){
+					cmdRemove.useAction(inputCommand);
+				}
+				else{
+					System.out.println("Unknown command");
+					JOptionPane.showMessageDialog(null, "Unknown command");
+				}
+			}
+			else{
+				System.out.println("Unknown command: " + firstInstanceOfSpaces);
+				JOptionPane.showMessageDialog(null, "Unknown command");
+			}
+			tfNewTrain.setText("");
+		}
 			
 //			if train does not exist in list alltrains
 //			dan toevoegen en tekenen
@@ -219,7 +259,8 @@ public class Window extends javax.swing.JFrame implements ActionListener {
 //				drawTrain(train);
 //			}
 		
-		}
+		
+
 		else if (event.getSource() == btnChooseTrain)
 		{
 //			currentTrain veranderen om de wagon acties op uit te voeren
@@ -353,3 +394,4 @@ public class Window extends javax.swing.JFrame implements ActionListener {
 	}
 
 }
+
