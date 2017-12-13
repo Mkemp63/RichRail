@@ -1,7 +1,11 @@
 package Actions;
 
-public abstract class Action {
+import TaskSpecific.Controller;
 
+public abstract class Action {
 	
+	public Controller cont = Controller.getInstance();
+
+	public abstract void useAction();
 	
 }
