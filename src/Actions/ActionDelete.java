@@ -10,9 +10,9 @@ public class ActionDelete extends Action {
 	public void useAction() {
 		
 		if (type.equals("train")) {
-			cont.deleteTrain(name);
+			tcont.deleteTrain(name);
 		} else if (type.equals("wagon")) {
-			cont.deleteWagon(idWagon);
+			wcont.deleteWagon(idWagon);
 		}
 		
 	}

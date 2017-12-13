@@ -10,9 +10,9 @@ public class ActionGet extends Action {
 	public void useAction() {
 		
 		if (type.equals("train")){ 
-			cont.getSeats(name);
+			tcont.getSeats(name);
 		} else if (type.equals("wagon")) {
-			cont.getSeatsFromWagon(idWagon);
+			wcont.getSeatsFromWagon(idWagon);
 		}
 		
 		

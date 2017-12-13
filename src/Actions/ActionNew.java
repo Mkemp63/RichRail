@@ -20,9 +20,9 @@ public class ActionNew extends Action{
 	@Override
 	public void useAction() {
 		if (type.equals("train")) {
-			cont.addTrain(name);
+			tcont.addTrain(name);
 		} else if (type.equals("wagon")) {
-			cont.addWagon(id, numSeats);
+			wcont.addWagon(id, numSeats);
 		}
 	}
 
