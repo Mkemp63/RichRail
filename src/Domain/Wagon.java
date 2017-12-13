@@ -22,6 +22,4 @@ public class Wagon {
 	public void setSeats(int seats) {
 		Seats = seats;
 	}
-
-
 }
