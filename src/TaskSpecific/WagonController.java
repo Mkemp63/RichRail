@@ -21,10 +21,12 @@ public class WagonController extends Controller {
 		for(Wagon w : wagons ){ 
 			if (id == w.getID()){
 				wagonIDExists = true;
+				System.out.println("Wagon ID is al gebruikt");
 			}
 		}
 		
 		if(wagonIDExists == false ){
+			System.out.println("Wagon "+id+" build with "+seats+" seathingplaces");
 			wagonExists = false;
 			Wagon wagon = new Wagon(id, seats);
 			wagons.add(wagon);
