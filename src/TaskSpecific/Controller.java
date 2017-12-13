@@ -105,6 +105,8 @@ public class Controller implements Observable {
 						b = true;
 						t.removeWagon(w);
 						logs.add("Wagon "+wagon+" unlinked from train "+ train);
+						System.out.println("Wagon "+wagon+" unlinked from train "+ train);
+
 						notifyObservers();
 					}
 				}
@@ -112,6 +114,7 @@ public class Controller implements Observable {
 		}
 		if(!b){
 			logs.add("Wagon "+wagon+" not unlinked from train "+ train);
+			System.out.println("Wagon "+wagon+" not unlinked from train "+ train);
 			notifyObservers();
 		}
 	}
