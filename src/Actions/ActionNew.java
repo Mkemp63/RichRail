@@ -31,16 +31,16 @@ public class ActionNew extends Action{
 		if (type.equals("train")){
 			name = commands[2];
 			//vanaf hier weten we dat er een trein moet worden toegevoegd
-			tcont.addTrain(name);
+			cont.addTrain(name);
 		
 		} else if(type.equals("wagon")){
 			idWagon = Integer.parseInt(commands[2]);
 			if (commands.length <= 3) { 
-				wcont.addWagon(idWagon, 20);
+				cont.addWagon(idWagon, 20);
 			} else if (commands.length > 3) {
 			numSeats =  Integer.parseInt(commands[4]);	
 			//vanaf hier weten we dat er een wagon moet worden toegevoegd
-			wcont.addWagon(idWagon, numSeats);
+			cont.addWagon(idWagon, numSeats);
 			}
 			}
 		else{

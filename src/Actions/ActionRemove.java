@@ -11,5 +11,4 @@ public class ActionRemove extends Action{
 		cont.unlinkWagon(name, toDelete);
 		
 	}
-
 }
