@@ -7,7 +7,7 @@ public class ActionGet extends Action {
 	private int idWagon;
 	
 	@Override
-	public void useAction() {
+	public void useAction(String train) {
 		
 		if (type.equals("train")){ 
 			tcont.getSeats(name);

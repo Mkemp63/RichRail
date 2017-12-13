@@ -18,7 +18,7 @@ public class ActionNew extends Action{
 	};
 	
 	@Override
-	public void useAction() {
+	public void useAction(String train) {
 		if (type.equals("train")) {
 			tcont.addTrain(name);
 		} else if (type.equals("wagon")) {

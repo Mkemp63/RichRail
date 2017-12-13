@@ -6,7 +6,7 @@ public class ActionRemove extends Action{
 	private int toDelete;
 	
 	@Override
-	public void useAction() {
+	public void useAction(String train) {
 	
 		cont.unlinkWagon(name, toDelete);
 		
