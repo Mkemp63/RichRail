@@ -18,6 +18,7 @@ public class Controller implements Observable {
 		return instance;
 	}
 
+	//Check if train exists
 	public boolean trainNotEquals(String name){
 		for(Train t: trains){
 			if(t.getName().equals(name)){
@@ -26,6 +27,7 @@ public class Controller implements Observable {
 		}return true;
 	}
 
+	//Check if wagon exists
 	public boolean wagonNotEquals(int id){
 		ArrayList<Wagon> WagonList = wagons;
 		for(Wagon w: WagonList){
@@ -34,7 +36,8 @@ public class Controller implements Observable {
 			}
 		}return true;
 	}
-
+	
+	//Check if wagon is linked
 	public boolean wagonInUse(Wagon wagon){
 		ArrayList<Wagon> WagonList = null;
 		for(Train t: trains){
@@ -48,6 +51,7 @@ public class Controller implements Observable {
 		return true;
 	}
 
+	//Link wagon to train
 	public void linkWagon(String train, int wagon){
 		System.out.println("Check Train: "+ train + " Wagon: " + wagon);
 
@@ -83,6 +87,7 @@ public class Controller implements Observable {
 		}
 	}
 
+	//Unlink wagon to train
 	public void unlinkWagon(String train, int wagon){
 		if(trainNotEquals(train)){
 			logs.add("Train does not exist");
@@ -114,6 +119,7 @@ public class Controller implements Observable {
 		}
 	}
 
+	//Update windows
 	public void notifyObservers() {
 
 		if(observers.size() == 0) {
