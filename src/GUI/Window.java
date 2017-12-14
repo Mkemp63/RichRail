@@ -3,9 +3,11 @@ package GUI;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.LayoutManager2;
 import java.awt.event.ActionEvent;
@@ -19,11 +21,14 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.WindowConstants;
 import javax.swing.border.BevelBorder;
 
+import TaskSpecific.*;
 import Actions.*;
 
 
@@ -31,6 +36,8 @@ import Actions.*;
 public class Window extends javax.swing.JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	
+	private Controller controller;
+
 	private JPanel jPanel1;
 	private JTextPane tpTextTrain;
 	private JButton btnDeleteWagon3;
@@ -48,7 +55,15 @@ public class Window extends javax.swing.JFrame implements ActionListener {
 	private JTextField tfNewTrain;
 	private JPanel jPanel2;
 	private JPanel drawPanel;
-	
+
+	private JPanel jPanel3;
+	private JPanel jPanel4;
+	private JTextPane tpCommandInput;
+	private JTextField tfCommandLine;
+	private JTextArea taOverview;
+	private JTextArea taOutput;
+	private JButton btnExecute;
+
 	private HashMap numberOfWagons;
 	private int currentNumberOfWagons;
 	private int currentTrain = -1;
@@ -67,8 +82,83 @@ public class Window extends javax.swing.JFrame implements ActionListener {
 		getContentPane().setLayout(layout);
 		pack();
 		setSize(800, 600);
-		initGUI();
+		initCLIGUI();
 		
+	}
+	
+	private void initCLIGUI() {
+		try
+		{
+			this.setTitle("RichRail | Command Line");
+			GridBagLayout thisLayout = new GridBagLayout();
+			setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+			thisLayout.rowWeights = new double[] {0.1, 0.1, 0.1, 0.1};
+			thisLayout.rowHeights = new int[] {7, 7, 7, 7};
+			thisLayout.columnWeights = new double[] {0.1, 0.1, 0.1, 0.1};
+			thisLayout.columnWidths = new int[] {7, 7, 7, 7};
+			getContentPane().setLayout(thisLayout);
+			{
+				GridBagConstraints c = new GridBagConstraints();
+				jPanel4 = new JPanel();
+				GridBagLayout jPanel4Layout = new GridBagLayout();
+				//jPanel4.setLayout(null);
+				jPanel4.setLayout(jPanel4Layout);
+				getContentPane().add(jPanel4, new GridBagConstraints(0, 0, 4, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+				{
+					taOverview = new JTextArea ();
+					taOverview.setPreferredSize(new Dimension(350, 400));
+					taOverview.setBackground(Color.WHITE);
+					taOverview.setForeground(Color.black);
+					taOverview.setEditable(false);
+					taOverview.setText("Dit is de overview area");
+					taOverview.setSize(400, 200);
+					taOverview.setVisible(true);
+					taOverview.setLineWrap(true);
+					JScrollPane scrollpane = new JScrollPane(taOverview);
+					c.gridy = 0;
+					c.gridx = 0;
+					c.gridwidth = 2;
+					jPanel4.add(scrollpane, c);
+				}
+				{
+					taOutput = new JTextArea ();
+					taOutput.setPreferredSize(new Dimension(350, 400));
+					taOutput.setBackground(Color.BLACK);
+					taOutput.setForeground(Color.WHITE);
+					taOutput.setEditable(false);
+					taOutput.setText("Dit is de output area");
+					taOutput.setSize(400, 200);
+					taOutput.setVisible(true);
+					taOutput.setLineWrap(true);
+					JScrollPane scrollpane1 = new JScrollPane(taOutput);
+					c.gridy = 0;
+					c.gridx = 2;
+					jPanel4.add(scrollpane1, c);
+				}
+				{
+					tfCommandLine = new JTextField(20);
+					c.gridy = 2;
+					c.gridx = 1;
+					tfCommandLine.setText("Command Line Input");
+					jPanel4.add(tfCommandLine, c);
+				}
+				{
+					btnExecute = new JButton();
+					c.gridy = 2;
+					c.gridx = 2;
+					jPanel4.add(btnExecute, c);
+					btnExecute.setText("Execute command");
+					btnExecute.addActionListener(this);
+				}
+					
+				}
+			pack();
+			setSize(800, 600);
+			numberOfWagons = new HashMap();
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	private void initGUI() {
@@ -205,6 +295,28 @@ public class Window extends javax.swing.JFrame implements ActionListener {
 		}
 	}
 	
+	public void setController(Controller con){
+ 		//Dit is nodig voor de Displayer
+ 		this.controller = con;               
+        con.addObserver( this );
+ 	} 
+
+	@Override
+	public void update(Observable subject) {
+		//Bij het toevoegen van een nieuwe command moet die aan deze lijst
+		//Toegevoegd worden
+		for(String string :controller.getLogs()){
+			if(!commandsString.contains(string)){
+				commandsString.add(string);
+			}
+		}
+		String s = "";
+		for(String string: commandsString){
+			s = s + string+ "\n";
+		}
+		taOutput.setText(s);
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		Action cmdAdd = new ActionAdd();
@@ -214,10 +326,10 @@ public class Window extends javax.swing.JFrame implements ActionListener {
 		Action cmdGet = new ActionGet();
 		int firstInstanceOfSpaces;
 		
-		if (event.getSource()== btnNewTrain)
+		if (event.getSource()== btnExecute)
 		{
 			
-			String inputCommand = tfNewTrain.getText();
+			String inputCommand = tfCommandLine.getText();
 			 
 			firstInstanceOfSpaces = inputCommand.indexOf(" ", 0);
 			if(firstInstanceOfSpaces >= 0){//kijken of wel een spatie inzit om het eerste woord er uit te halen
@@ -245,7 +357,7 @@ public class Window extends javax.swing.JFrame implements ActionListener {
 				System.out.println("Unknown command: " + firstInstanceOfSpaces);
 				JOptionPane.showMessageDialog(null, "Unknown command");
 			}
-			tfNewTrain.setText("");
+			tfCommandLine.setText("");
 		}
 			
 //			if train does not exist in list alltrains
@@ -257,9 +369,7 @@ public class Window extends javax.swing.JFrame implements ActionListener {
 //				train = addTrain(train); // TODO: Vanuit actie klasse de juiste action aanroepen
 //				currentTrain = cbAllTrains.getSelectedIndex();
 //				drawTrain(train);
-//			}
-		
-		
+//			}		
 
 		else if (event.getSource() == btnChooseTrain)
 		{
