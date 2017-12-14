@@ -1,4 +1,4 @@
-package TaskSpecific;
+package ApplicationLogic;
 
 public interface Observer {
 	

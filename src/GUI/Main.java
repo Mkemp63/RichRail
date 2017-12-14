@@ -2,7 +2,7 @@ package GUI;
 
 import javax.swing.SwingUtilities;
 
-import TaskSpecific.Controller;
+import ApplicationLogic.Controller;
 
 public class Main {
 	private static Controller controller = Controller.getInstance();

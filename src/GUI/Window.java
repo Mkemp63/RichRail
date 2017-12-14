@@ -26,8 +26,8 @@ import javax.swing.JTextPane;
 import javax.swing.WindowConstants;
 import javax.swing.border.BevelBorder;
 
-import TaskSpecific.*;
 import Actions.*;
+import ApplicationLogic.*;
 import Domain.Train;
 import Domain.Wagon;
 

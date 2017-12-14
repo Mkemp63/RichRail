@@ -1,6 +1,6 @@
 package Actions;
 
-import TaskSpecific.Controller;
+import ApplicationLogic.Controller;
 
 
 public abstract class Action {
