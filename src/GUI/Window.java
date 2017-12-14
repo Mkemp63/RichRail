@@ -175,7 +175,7 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 				{
 					btnExecute = new JButton();
 					c.gridy = 3;
-					c.gridx = 0;
+					c.gridx = 1;
 					jPanel4.add(btnExecute, c);
 					btnExecute.setText("Execute command");
 					btnExecute.addActionListener(this);

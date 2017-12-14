@@ -210,11 +210,11 @@ public class Controller implements Observable {
 		}
 
 		if(wagonIDExists == false ){
-			System.out.println("Wagon "+id+" build with "+seats+" seathingplaces");
+			System.out.println("Wagon "+id+" build with "+seats+" seats");
 			wagonExists = false;
 			Wagon wagon = new Wagon(id, seats);
 			wagons.add(wagon);
-			logs.add("Wagon "+id+" build with "+seats+" seathingplaces");
+			logs.add("Wagon "+id+" build with "+seats+" seats");
 			notifyObservers();
 		}
 
