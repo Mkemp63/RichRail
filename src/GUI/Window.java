@@ -174,24 +174,24 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 				}
 				{
 					btnExecute = new JButton();
-					c.gridy = 2;
-					c.gridx = 2;
+					c.gridy = 3;
+					c.gridx = 1;
 					jPanel4.add(btnExecute, c);
 					btnExecute.setText("Execute command");
 					btnExecute.addActionListener(this);
 				}
 				{
 					btnNewWindow = new JButton();
-					c.gridy = 3;
-					c.gridx= 0;
+					c.gridy = 2;
+					c.gridx= 2;
 					jPanel4.add(btnNewWindow, c);
 					btnNewWindow.setText("Open other window");
 					btnNewWindow.addActionListener(this);
 				}
 				{
 					btnOpenNewWindow = new JButton();
-					c.gridy = 4;
-					c.gridx = 0;
+					c.gridy = 3;
+					c.gridx = 2;
 					jPanel4.add(btnOpenNewWindow,c);
 					btnOpenNewWindow.setText("Open extra window");
 					btnOpenNewWindow.addActionListener(this);
