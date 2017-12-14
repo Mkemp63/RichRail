@@ -174,16 +174,16 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 				}
 				{
 					btnExecute = new JButton();
-					c.gridy = 2;
-					c.gridx = 2;
+					c.gridy = 3;
+					c.gridx = 0;
 					jPanel4.add(btnExecute, c);
 					btnExecute.setText("Execute command");
 					btnExecute.addActionListener(this);
 				}
 				{
 					btnNewWindow = new JButton();
-					c.gridy = 3;
-					c.gridx= 0;
+					c.gridy = 2;
+					c.gridx= 2;
 					jPanel4.add(btnNewWindow, c);
 					btnNewWindow.setText("Open other window");
 					btnNewWindow.addActionListener(this);
@@ -191,7 +191,7 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 				{
 					btnOpenNewWindow = new JButton();
 					c.gridy = 4;
-					c.gridx = 0;
+					c.gridx = 2;
 					jPanel4.add(btnOpenNewWindow,c);
 					btnOpenNewWindow.setText("Open extra window");
 					btnOpenNewWindow.addActionListener(this);
@@ -399,7 +399,7 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 				// hier worden weer de componenten toegevoegd aan het panel
 				pnlWagons.setBorder(BorderFactory.createEtchedBorder(BevelBorder.LOWERED));
 				{
-					tfCurrentTrain = new JTextField();
+					tfCurrentTrain = new JTextField(20);
 					gbc.gridx = 0;
 					gbc.gridy = 0;
 					gbc.gridwidth = 1;
@@ -408,7 +408,7 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 					tfCurrentTrain.setText("Selected: ");
 				}
 				{
-					tfCurrentWagon = new JTextField();
+					tfCurrentWagon = new JTextField(20);
 					gbc.gridx = 0;
 					gbc.gridy = 1;
 					gbc.gridwidth = 1;
@@ -505,8 +505,7 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 		Action cmdGet = new ActionGet();
 		String firstWord;
 
-		if (event.getSource()== btnExecute)
-		{
+		if (event.getSource()== btnExecute) {
 			String inputCommand = tfCommandLine.getText();
 			if (inputCommand != null && inputCommand.length() > 0 && inputCommand.charAt(inputCommand.length() - 1) == ';') {
 				inputCommand = inputCommand.substring(0, inputCommand.length() - 1);
@@ -629,16 +628,9 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 			{
 				int selection = (int) cbAllWagons.getSelectedItem();
 				tfCurrentWagon.setText("Selected: " + selection);
-				int ti = cbAllWagons.getSelectedIndex();					
-				currentWagon = ti;
-				try
-				{
-					currentNumberOfWagons = (Integer) numberOfWagons.get(currentTrain);
-				}
-				catch (Exception e)
-				{
-					currentNumberOfWagons = 0;
-				}			
+				int index = controller.getWagonsIndexByWagonID(selection);
+				currentWagon = index;
+				System.out.println("Selected wagon has id: " + index);
 			}
 		}
 		else if (event.getSource() == btnDeleteWagon) {
@@ -651,19 +643,9 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 				cbAllWagons.removeAllItems();
 				for (Wagon wagon : controller.wagons) {
 					cbAllTrains.addItem(wagon.getID());
-				}
-//				if ((String)cbAllWagons.getSelectedItem() != null)
-//				{
-//					currentWagon = cbAllWagons.getSelectedIndex();
-//					tfCurrentWagon.setText("selected: " + (String)cbAllWagons.getSelectedItem());
-//				}
-//				else
-//				{
-//					currentWagon = 0;
-//					tfCurrentWagon.setText("Selected: ");
-//				}
 				currentWagon = 0;
 				tfCurrentWagon.setText("Selected: ");
+				}
 			}
 		}
 		else if (event.getSource() == btnLinkWagon) {
@@ -675,41 +657,4 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 			controller.unlinkWagon(selection, currentWagon);
 		}
 	}
-
-	public void drawTrain (String train) 
-	{
-		if (train != "")
-		{
-			Graphics g = drawPanel.getGraphics();
-			g.setColor(Color.LIGHT_GRAY);
-			g.fillRect(30,80+currentTrain*OFFSET,80,40);
-			g.fillRect(80,60+currentTrain*OFFSET,30,30);
-			g.drawRoundRect(85, 40+currentTrain*OFFSET, 20, 20, 20, 20);
-			g.drawRoundRect(85, currentTrain*OFFSET, 40, 40, 40, 40);
-			g.setColor(Color.BLACK);
-			g.fillRoundRect(35, 120+currentTrain*OFFSET, 20, 20, 20, 20);
-			g.fillRoundRect(80, 120+currentTrain*OFFSET, 20, 20, 20, 20);
-			g.drawString(train,40,105+currentTrain*OFFSET);
-		}
-	}
-
-	public void drawWagon (String wagon) 
-	{
-		Graphics g = drawPanel.getGraphics();
-		g.setColor(Color.LIGHT_GRAY);
-		g.fillRect(30+currentNumberOfWagons*TRAINLENGTH,80+currentTrain*OFFSET,80,40);
-		g.setColor(Color.BLACK);
-		g.fillRoundRect(35+currentNumberOfWagons*TRAINLENGTH, 120+currentTrain*OFFSET, 20, 20, 20, 20);
-		g.fillRoundRect(80+currentNumberOfWagons*TRAINLENGTH, 120+currentTrain*OFFSET, 20, 20, 20, 20);
-		g.drawString(wagon,40+currentNumberOfWagons*TRAINLENGTH,105+currentTrain*OFFSET);
-	}
-
-	public void eraseTrain (String train) {
-
-	}
-
-	public void eraseWagon (String wagon) {
-
-	}
-
 }

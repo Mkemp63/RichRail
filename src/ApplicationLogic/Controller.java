@@ -271,6 +271,16 @@ public class Controller implements Observable {
 	public void addObserver(Observer o) {
 		observers.add(o);
 	}
+	
+	public int getWagonsIndexByWagonID (int id) {
+		for (Wagon w : wagons) {
+			int y = w.getID();
+			if (y == id) {
+				return y;
+			}
+		}
+		return -1;
+	}
 
 	@Override
 	public void removeObserver(Observer o) {
