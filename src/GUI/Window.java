@@ -29,6 +29,7 @@ import javax.swing.border.BevelBorder;
 import TaskSpecific.*;
 import Actions.*;
 import Domain.Train;
+import Domain.Wagon;
 
 public class Window extends javax.swing.JFrame implements ActionListener, Observer {
 	// variabelen declareren
@@ -88,7 +89,7 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 
 
 	}
-	
+
 	// methode voor het initialiseren van de CLI GUI
 	private void initCLIGUI() {
 		try
@@ -138,7 +139,7 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 					for(String string: logs){
 						s = string+ "\n" + s;
 					}
-										
+
 					taOutput.setText(s);
 					taOutput.setSize(400, 200);
 					taOutput.setVisible(true);
@@ -235,18 +236,18 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 				}
 				{
 					DefaultComboBoxModel cbAllTrainsModel = new DefaultComboBoxModel();
-//					try {
-						Train[] trainArray = new Train[controller.trains.size()];
-						for (int i = 0; i < trainArray.length; i++) {
-							trainArray[i] = controller.trains.get(i);
-						}
-						cbAllTrains = new JComboBox(trainArray);
-//					}
-//					catch (NullPointerException e){
-//						e.printStackTrace();
-//						cbAllTrains = new JComboBox();
-//					}
-				/*	GridLayout cbAllTrainsLayout = new GridLayout(1, 1);
+					//					try {
+					Train[] trainArray = new Train[controller.trains.size()];
+					for (int i = 0; i < trainArray.length; i++) {
+						trainArray[i] = controller.trains.get(i);
+					}
+					cbAllTrains = new JComboBox(trainArray);
+					//					}
+					//					catch (NullPointerException e){
+					//						e.printStackTrace();
+					//						cbAllTrains = new JComboBox();
+					//					}
+					/*	GridLayout cbAllTrainsLayout = new GridLayout(1, 1);
 					cbAllTrainsLayout.setColumns(1);
 					cbAllTrainsLayout.setHgap(5);
 					//cbAllTrainsLayout.setVgap(5);
@@ -346,6 +347,32 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 	// deze methode update de logs die je uiteindelijk in de textarea ziet
 	@Override
 	public void update(Observable subject) {
+		String overviewString = "";
+
+		//Overview Area train update:
+		taOverview.setText(overviewString);
+		taOverview.setText(taOverview.getText() + "Trains: \n");
+		for (Train tr : controller.trains){
+			overviewString = overviewString + "(" + tr.getName() + ")";
+			for (Wagon w : tr.getWagons()){
+				overviewString = overviewString + "-(" + w.getID() + ")";
+			}
+			overviewString = overviewString + "\n";
+		}
+		taOverview.setText(taOverview.getText() +overviewString);
+
+		overviewString = "";
+		//Overview Area wagon update:
+		taOverview.setText(taOverview.getText() + "Wagons: \n");
+		for (Wagon w : controller.wagons){
+			overviewString = overviewString + "(" + w.getID() + ")";
+		}
+		taOverview.setText(taOverview.getText() +overviewString);
+		overviewString = "";
+
+
+
+		//Log update:
 		for(String log :controller.getLogs()){
 			if(!logs.contains(log)){
 				logs.add(log);
@@ -368,10 +395,10 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 		Action cmdNew = new ActionNew();
 		Action cmdGet = new ActionGet();
 		String firstWord;
-		
+
 		if (event.getSource()== btnExecute)
 		{
-			
+
 			String inputCommand = tfCommandLine.getText();
 			String[] commands = inputCommand.split(" ");
 			firstWord = commands[0];
@@ -388,22 +415,22 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 			}
 			else if(firstWord.equals("remove")){
 				cmdRemove.useAction(inputCommand);
-		
-			tfNewTrain.setText("");
+
+				tfNewTrain.setText("");
 			}
-			
-//			if train does not exist in list alltrains
-//			dan toevoegen en tekenen
-//			TODO: het bovenstaande en dus toevoegen vanuit controller klasse
-			
-//			if (train != null && train.trim().length()>0)
-//			{
-//				train = addTrain(train); // TODO: Vanuit actie klasse de juiste action aanroepen
-//				currentTrain = cbAllTrains.getSelectedIndex();
-//				drawTrain(train);
-//			}
-		
-		
+
+			//			if train does not exist in list alltrains
+			//			dan toevoegen en tekenen
+			//			TODO: het bovenstaande en dus toevoegen vanuit controller klasse
+
+			//			if (train != null && train.trim().length()>0)
+			//			{
+			//				train = addTrain(train); // TODO: Vanuit actie klasse de juiste action aanroepen
+			//				currentTrain = cbAllTrains.getSelectedIndex();
+			//				drawTrain(train);
+			//			}
+
+
 			tfCommandLine.setText("");
 		}
 		else if (event.getSource() == btnNewWindow) {
@@ -558,7 +585,5 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 	public void eraseWagon (String wagon) {
 
 	}
-
-
 
 }
