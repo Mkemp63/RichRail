@@ -1,15 +1,12 @@
 package GUI;
 
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
-import java.awt.LayoutManager2;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -89,7 +86,8 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 		initCLIGUI();
 	}
 
-	private void fillTemporaryNewCommans(){
+	// Een aantal treinen & wagons toevoegen.
+	private void fillTemporaryNewActions(){
 		controller.addTrain("sprinter");
 		controller.addWagon(8450, 25);
 		controller.addWagon(8550, 40);
@@ -184,7 +182,7 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 		{
 			e.printStackTrace();
 		}
-		fillTemporaryNewCommans();
+		fillTemporaryNewActions();
 
 	}
 
