@@ -27,7 +27,6 @@ public class Controller implements Observable {
 
 	public boolean trainNotEquals(String name){
 		for(Train t: trains){
-			System.out.println(t.getName());
 			if(t.getName().equals(name)){
 				return false;		
 			}
@@ -57,7 +56,18 @@ public class Controller implements Observable {
 	}
 
 	public void linkWagon(String train, int wagon){
-		System.out.println("Naam "+ train + " en id checken =" + wagon);
+		System.out.println("Check Train: "+ train + " Wagon: " + wagon);
+
+		if (trainNotEquals(train)) {
+			System.out.println("Wagon doet not exist.");
+			logs.add("Wagon doet not exist.");
+			notifyObservers();
+		}
+		if (wagonNotEquals(wagon)) {
+			System.out.println("Wagon doet not exist.");
+			logs.add("Wagon doet not exist.");
+			notifyObservers();
+		}
 
 		for(Train t: trains){
 			if(t.getName().equals(train)){
@@ -73,18 +83,10 @@ public class Controller implements Observable {
 							logs.add("Wagon is already in linked to another train.");
 							notifyObservers();
 						}
-					}else {
-						System.out.println("Wagon doet not exist.");
-						logs.add("Wagon doet not exist.");
-						notifyObservers();
 					}
 				}
-			}else {
-				System.out.println("train does not exist.");
-				logs.add("train does not exist.");
-				notifyObservers();
-			}
 
+			}
 		}
 	}
 
@@ -123,8 +125,8 @@ public class Controller implements Observable {
 			ob.update( this );
 		}
 	}
-	
-	
+
+
 	//Train Specific
 	public void addTrain(String name) {
 		if(trainNotEquals(name)){
@@ -146,20 +148,22 @@ public class Controller implements Observable {
 		if(trainNotEquals(train)){
 			logs.add("Train does not exist");
 			notifyObservers();
-		}
-		int seats = 0;
-		ArrayList<Train> Trainlist = trains;
-		ArrayList<Wagon> WagonList = null;
-		for(Train t: Trainlist){
-			if(t.getName().equals(train)){
-				WagonList = t.getWagons();
+		} else {
+			int seats = 0;
+			ArrayList<Train> Trainlist = trains;
+			ArrayList<Wagon> WagonList = null;
+			for(Train t: Trainlist){
+				if(t.getName().equals(train)){
+					WagonList = t.getWagons();
+				}
 			}
+			for(Wagon w: WagonList){
+				seats = seats + w.getSeats();
+			}
+			System.out.println("Number of seats in train "+train+":"+seats);
+			logs.add("Number of seats in train "+train+":"+seats);
+			notifyObservers();
 		}
-		for(Wagon w: WagonList){
-			seats = seats + w.getSeats();
-		}
-		logs.add("Number of seats in train "+train+":"+seats);
-		notifyObservers();
 	}
 	//Train Specific
 	public void deleteTrain(String train){
@@ -185,7 +189,7 @@ public class Controller implements Observable {
 			notifyObservers();
 		}
 	}
-	
+
 	//Wagon Specific	
 	public void addWagon(int id, int seats){
 		boolean wagonExists = true;
@@ -196,7 +200,7 @@ public class Controller implements Observable {
 				System.out.println("Wagon ID is al gebruikt");
 			}
 		}
-		
+
 		if(wagonIDExists == false ){
 			System.out.println("Wagon "+id+" build with "+seats+" seathingplaces");
 			wagonExists = false;

@@ -212,41 +212,35 @@ public class Window extends javax.swing.JFrame implements ActionListener {
 		Action cmdRemove = new ActionRemove();
 		Action cmdNew = new ActionNew();
 		Action cmdGet = new ActionGet();
-		int firstInstanceOfSpaces;
+		String firstWord;
 		
 		if (event.getSource()== btnNewTrain)
 		{
 			
 			String inputCommand = tfNewTrain.getText();
-			 
-			firstInstanceOfSpaces = inputCommand.indexOf(" ", 0);
-			if(firstInstanceOfSpaces >= 0){//kijken of wel een spatie inzit om het eerste woord er uit te halen
-				if (inputCommand.substring(0, firstInstanceOfSpaces).equals("new")){
-					cmdNew.useAction(inputCommand);
-				}
-				else if(inputCommand.substring(0, firstInstanceOfSpaces).equals("add")){
-					cmdAdd.useAction(inputCommand);
-				}
-				else if(inputCommand.substring(0, firstInstanceOfSpaces).equals("delete")){
-					cmdDelete.useAction(inputCommand);
-				}
-				else if(inputCommand.substring(0, firstInstanceOfSpaces).equals("getnumseats")){
-					cmdGet.useAction(inputCommand);
-				}
-				else if(inputCommand.substring(0, firstInstanceOfSpaces).equals("remove")){
-					cmdRemove.useAction(inputCommand);
-				}
-				else{
-					System.out.println("Unknown command");
-					JOptionPane.showMessageDialog(null, "Unknown command");
-				}
+			String[] commands = inputCommand.split(" ");
+			firstWord = commands[0];
+			if (firstWord.equals("new")){
+				cmdNew.useAction(inputCommand);
+			} else if(firstWord.equals("add")){
+				cmdAdd.useAction(inputCommand);
+			}
+			else if(firstWord.equals("delete")){
+				cmdDelete.useAction(inputCommand);
+			}
+			else if(firstWord.equals("getnumseats")){
+				cmdGet.useAction(inputCommand);
+			}
+			else if(firstWord.equals("remove")){
+				cmdRemove.useAction(inputCommand);
 			}
 			else{
-				System.out.println("Unknown command: " + firstInstanceOfSpaces);
+				System.out.println("Unknown command");
 				JOptionPane.showMessageDialog(null, "Unknown command");
 			}
+
 			tfNewTrain.setText("");
-		}
+			}
 			
 //			if train does not exist in list alltrains
 //			dan toevoegen en tekenen

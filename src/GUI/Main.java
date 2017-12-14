@@ -14,7 +14,6 @@ public class Main {
 				Window w = new Window("RichRail");				
 				w.setLocationRelativeTo(null);
 				w.setVisible(true);
-
 			}
 		});
 	}

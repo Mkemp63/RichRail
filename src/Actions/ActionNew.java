@@ -4,47 +4,36 @@ import Domain.Train;
 import Domain.Wagon;
 
 public class ActionNew extends Action{
-	
+
 	private String name;
 	private int numSeats;
-	private boolean seatsGiven;
 	private String type;
 	private int idWagon;
-	
-	private int firstInstanceOfSpaces;
-	private int secondInstanceOfSpaces;
-	private int thirdInstanceOfSpaces;
-	private int fourthInstanceOfSpaces;
-	
-	public void seats() {
-		if (seatsGiven = false) {
-			numSeats = 20;
-		}
-	};
-	
+
 	@Override
 	public void useAction(String input) {
 		System.out.println(input);
+		try {
 		String[] commands = input.split(" ");
 		type = commands[1];
 		System.out.println(commands[1]);
-		if (type.equals("train")){
-			name = commands[2];
-			//vanaf hier weten we dat er een trein moet worden toegevoegd
-			cont.addTrain(name);
-		
-		} else if(type.equals("wagon")){
-			idWagon = Integer.parseInt(commands[2]);
-			if (commands.length <= 3) { 
-				cont.addWagon(idWagon, 20);
-			} else if (commands.length > 3) {
-			numSeats =  Integer.parseInt(commands[4]);	
-			//vanaf hier weten we dat er een wagon moet worden toegevoegd
-			cont.addWagon(idWagon, numSeats);
+			if (type.equals("train") && (commands.length == 3)){
+				name = commands[2];
+				cont.addTrain(name);
+
+			} else if(type.equals("wagon") && commands.length == 3){
+				idWagon = Integer.parseInt(commands[2]);
+				if (commands.length <= 3) { 
+					cont.addWagon(idWagon, 20);
+				} else if (commands.length == 5) {
+					numSeats =  Integer.parseInt(commands[4]);
+					cont.addWagon(idWagon, numSeats);
+				}
 			}
+			else {
+				System.out.println("Unknown command");
 			}
-		else{
-			
+		} catch(Exception e){
 			System.out.println("Unknown command");
 		}
 	}
