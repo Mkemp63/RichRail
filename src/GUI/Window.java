@@ -398,7 +398,6 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 
 		if (event.getSource()== btnExecute)
 		{
-<<<<<<< HEAD
 			String inputCommand = tfCommandLine.getText();
 			if (inputCommand != null && inputCommand.length() > 0 && inputCommand.charAt(inputCommand.length() - 1) == ';') {
 				inputCommand = inputCommand.substring(0, inputCommand.length() - 1);
@@ -426,27 +425,6 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 			}else {
 				JOptionPane.showMessageDialog(null, "command not correct");
 				System.out.println("geen ;");
-=======
-
-			String inputCommand = tfCommandLine.getText();
-			String[] commands = inputCommand.split(" ");
-			firstWord = commands[0];
-			if (firstWord.equals("new")){
-				cmdNew.useAction(inputCommand);
-			} else if(firstWord.equals("add")){
-				cmdAdd.useAction(inputCommand);
-			}
-			else if(firstWord.equals("delete")){
-				cmdDelete.useAction(inputCommand);
-			}
-			else if(firstWord.equals("getnumseats")){
-				cmdGet.useAction(inputCommand);
-			}
-			else if(firstWord.equals("remove")){
-				cmdRemove.useAction(inputCommand);
-
-				tfNewTrain.setText("");
->>>>>>> origin/master
 			}
 
 			//			if train does not exist in list alltrains
