@@ -29,6 +29,7 @@ import javax.swing.border.BevelBorder;
 import TaskSpecific.*;
 import Actions.*;
 import Domain.Train;
+import Domain.Wagon;
 
 public class Window extends javax.swing.JFrame implements ActionListener, Observer {
 	// variabelen declareren
@@ -89,7 +90,7 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 
 
 	}
-	
+
 	// methode voor het initialiseren van de CLI GUI
 	private void initCLIGUI() {
 		try
@@ -139,7 +140,7 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 					for(String string: logs){
 						s = string+ "\n" + s;
 					}
-										
+
 					taOutput.setText(s);
 					taOutput.setSize(400, 200);
 					taOutput.setVisible(true);
@@ -239,7 +240,7 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 					cbAllTrains.removeAllItems();
 					for (Train t : controller.trains) {
 						cbAllTrains.addItem(t.getName());
-					}
+					}					
 					jPanel2.add(cbAllTrains, new GridBagConstraints(1, 1, 1, 2, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 				}
 				{
@@ -334,6 +335,32 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 	// deze methode update de logs die je uiteindelijk in de textarea ziet
 	@Override
 	public void update(Observable subject) {
+		String overviewString = "";
+
+		//Overview Area train update:
+		taOverview.setText(overviewString);
+		taOverview.setText(taOverview.getText() + "Trains: \n");
+		for (Train tr : controller.trains){
+			overviewString = overviewString + "(" + tr.getName() + ")";
+			for (Wagon w : tr.getWagons()){
+				overviewString = overviewString + "-(" + w.getID() + ")";
+			}
+			overviewString = overviewString + "\n";
+		}
+		taOverview.setText(taOverview.getText() +overviewString);
+
+		overviewString = "";
+		//Overview Area wagon update:
+		taOverview.setText(taOverview.getText() + "Wagons: \n");
+		for (Wagon w : controller.wagons){
+			overviewString = overviewString + "(" + w.getID() + ")";
+		}
+		taOverview.setText(taOverview.getText() +overviewString);
+		overviewString = "";
+
+
+
+		//Log update:
 		for(String log :controller.getLogs()){
 			if(!logs.contains(log)){
 				logs.add(log);
@@ -356,28 +383,36 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 		Action cmdNew = new ActionNew();
 		Action cmdGet = new ActionGet();
 		String firstWord;
-		
+
 		if (event.getSource()== btnExecute)
 		{
-			
 			String inputCommand = tfCommandLine.getText();
-			String[] commands = inputCommand.split(" ");
-			firstWord = commands[0];
-			if (firstWord.equals("new")){
-				cmdNew.useAction(inputCommand);
-			} else if(firstWord.equals("add")){
-				cmdAdd.useAction(inputCommand);
-			}
-			else if(firstWord.equals("delete")){
-				cmdDelete.useAction(inputCommand);
-			}
-			else if(firstWord.equals("getnumseats")){
-				cmdGet.useAction(inputCommand);
-			}
-			else if(firstWord.equals("remove")){
-				cmdRemove.useAction(inputCommand);
-		
-			tfNewTrain.setText("");
+			if (inputCommand != null && inputCommand.length() > 0 && inputCommand.charAt(inputCommand.length() - 1) == ';') {
+				inputCommand = inputCommand.substring(0, inputCommand.length() - 1);
+				String[] commands = inputCommand.split(" ");
+				firstWord = commands[0];
+				if (firstWord.equals("new")){
+					cmdNew.useAction(inputCommand);
+				} else if(firstWord.equals("add")){
+					cmdAdd.useAction(inputCommand);
+				}
+				else if(firstWord.equals("delete")){
+					cmdDelete.useAction(inputCommand);
+				}
+				else if(firstWord.equals("getnumseats")){
+					cmdGet.useAction(inputCommand);
+				}
+				else if(firstWord.equals("remove")){
+					cmdRemove.useAction(inputCommand);
+
+					tfCommandLine.setText("");
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "command not correct");
+				}
+			}else {
+				JOptionPane.showMessageDialog(null, "command not correct");
+				System.out.println("geen ;");
 			}
 			tfCommandLine.setText("");
 		}
@@ -397,7 +432,7 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 			{
 				if (controller.trainNotEquals(train)) {
 					controller.addTrain(train);
-					currentTrain = cbAllTrains.getSelectedIndex(); //TODO: hoe current train krijgen nu?
+					currentTrain = cbAllTrains.getSelectedIndex();
 					drawTrain(train);
 					cbAllTrains.removeAllItems();
 					for (Train t : controller.trains) {
@@ -531,7 +566,6 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 				controller.deleteWagon(wagonNumber);
 			}
 		}
-
 	}
 
 	public void drawTrain (String train) 
@@ -569,7 +603,5 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 	public void eraseWagon (String wagon) {
 
 	}
-
-
 
 }

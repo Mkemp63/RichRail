@@ -1,5 +1,7 @@
 package Actions;
 
+import javax.swing.JOptionPane;
+
 public class ActionGet extends Action {
 
 	private String name;
@@ -21,9 +23,11 @@ public class ActionGet extends Action {
 				cont.getSeatsFromWagon(idWagon);
 			}
 			else{
+				JOptionPane.showMessageDialog(null, "command not correct");
 				System.out.println("Unknown command");
 			}
 		} catch(Exception e){
+			JOptionPane.showMessageDialog(null, "command not correct");
 			System.out.println("Unknown command");
 		}
 	}
