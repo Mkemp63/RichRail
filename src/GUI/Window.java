@@ -84,14 +84,9 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 		setSize(800, 600);
 		this.setController(controller);		
 		initCLIGUI();
-	}
+		logs.addAll(controller.getLogs());
 
-	// Een aantal treinen & wagons toevoegen.
-	private void fillTemporaryNewActions(){
-		controller.addTrain("sprinter");
-		controller.addWagon(8450, 25);
-		controller.addWagon(8550, 40);
-		controller.addWagon(8650, 25);
+
 	}
 	
 	private void initCLIGUI() {
@@ -135,12 +130,11 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 					taOutput.setForeground(Color.WHITE);
 					taOutput.setEditable(false);
 
-					logs.addAll(controller.getLogs());
 					String s = "";
 					for(String string: logs){
 						s = string+ "\n" + s;
 					}
-
+										
 					taOutput.setText(s);
 					taOutput.setSize(400, 200);
 					taOutput.setVisible(true);
@@ -182,7 +176,6 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 		{
 			e.printStackTrace();
 		}
-		fillTemporaryNewActions();
 
 	}
 
@@ -554,4 +547,3 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 
 
 }
-
