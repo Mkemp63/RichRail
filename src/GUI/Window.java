@@ -36,6 +36,7 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 
 	private Controller controller = Controller.getInstance();
 	private ArrayList<String> logs = new ArrayList<String>();
+	
 
 	private JPanel jPanel1;
 	private JTextPane tpTextTrain;
@@ -234,25 +235,12 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 					btnNewTrain.addActionListener(this);
 				}
 				{
-					DefaultComboBoxModel cbAllTrainsModel = new DefaultComboBoxModel();
-//					try {
-						Train[] trainArray = new Train[controller.trains.size()];
-						for (int i = 0; i < trainArray.length; i++) {
-							trainArray[i] = controller.trains.get(i);
-						}
-						cbAllTrains = new JComboBox(trainArray);
-//					}
-//					catch (NullPointerException e){
-//						e.printStackTrace();
-//						cbAllTrains = new JComboBox();
-//					}
-				/*	GridLayout cbAllTrainsLayout = new GridLayout(1, 1);
-					cbAllTrainsLayout.setColumns(1);
-					cbAllTrainsLayout.setHgap(5);
-					//cbAllTrainsLayout.setVgap(5);
-					cbAllTrains.setLayout(cbAllTrainsLayout);*/
+					cbAllTrains = new JComboBox();
+					cbAllTrains.removeAllItems();
+					for (Train t : controller.trains) {
+						cbAllTrains.addItem(t.getName());
+					}
 					jPanel2.add(cbAllTrains, new GridBagConstraints(1, 1, 1, 2, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-					cbAllTrains.setModel(cbAllTrainsModel);
 				}
 				{
 					btnChooseTrain = new JButton();
@@ -391,19 +379,6 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 		
 			tfNewTrain.setText("");
 			}
-			
-//			if train does not exist in list alltrains
-//			dan toevoegen en tekenen
-//			TODO: het bovenstaande en dus toevoegen vanuit controller klasse
-			
-//			if (train != null && train.trim().length()>0)
-//			{
-//				train = addTrain(train); // TODO: Vanuit actie klasse de juiste action aanroepen
-//				currentTrain = cbAllTrains.getSelectedIndex();
-//				drawTrain(train);
-//			}
-		
-		
 			tfCommandLine.setText("");
 		}
 		else if (event.getSource() == btnNewWindow) {
@@ -424,101 +399,137 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 					controller.addTrain(train);
 					currentTrain = cbAllTrains.getSelectedIndex(); //TODO: hoe current train krijgen nu?
 					drawTrain(train);
+					cbAllTrains.removeAllItems();
+					for (Train t : controller.trains) {
+						cbAllTrains.addItem(t.getName());
+					}
 				}
 			}
 		}
 		else if (event.getSource() == btnChooseTrain)
 		{
-			//			currentTrain veranderen om de wagon acties op uit te voeren
-			//			de naam en de id dus halen uit de list en deze als variabelen opslaan
-			//			vervolgens deze variabele gebruiken in de functies die op de wagons slaan
-			//			Wanneer een trein al wagens heeft moeten deze dus getekend worden met juiste type etc
-
-			//			if (cbAllTrains.getItemCount() > 0)
-			//			{
-			//				String selection = (String)cbAllTrains.getSelectedItem();
-			//				tfCurrentTrain.setText("selected: " + selection);
-			//				int ti = cbAllTrains.getSelectedIndex();
-			//				if (ti != currentTrain)
-			//				{
-			//					numberOfWagons.put(currentTrain, currentNumberOfWagons);
-			//				}
-			//				currentTrain = ti;
-			//				try
-			//				{
-			//					currentNumberOfWagons = (Integer) numberOfWagons.get(currentTrain);
-			//				}
-			//				catch (Exception e)
-			//				{
-			//					currentNumberOfWagons = 0;
-			//				}			
-			//			}
+			if (cbAllTrains.getItemCount() > 0)
+			{
+				String selection = (String)cbAllTrains.getSelectedItem();
+				tfCurrentTrain.setText("Selected: " + selection);
+				int ti = cbAllTrains.getSelectedIndex();
+				if (ti != currentTrain)
+				{
+					numberOfWagons.put(currentTrain, currentNumberOfWagons);
+				}
+				currentTrain = ti;
+				try
+				{
+					currentNumberOfWagons = (Integer) numberOfWagons.get(currentTrain);
+				}
+				catch (Exception e)
+				{
+					currentNumberOfWagons = 0;
+				}			
+			}
 		}
 		else if (event.getSource() == btnDeleteTrain)
 		{
-			//			currenttrain weer gebruiken en dan weghalen uit de list in de controller
-
-
-			//			if (cbAllTrains.getItemCount() > 0)
-			//			{
-			//				String t = (String)cbAllTrains.getSelectedItem();
-			//				cbAllTrains.removeItemAt(cbAllTrains.getSelectedIndex());
-			//				numberOfWagons.remove(t);
-			//				repaint();
-			//				if ((String)cbAllTrains.getSelectedItem() != null)
-			//				{
-			//					currentTrain = cbAllTrains.getSelectedIndex();
-			//					tfCurrentTrain.setText("selected: " + (String)cbAllTrains.getSelectedItem());
-			//				}
-			//				else
-			//				{
-			//					currentTrain = 0;
-			//					tfCurrentTrain.setText("selected: ");
-			//				}
-			//			}
+			if (cbAllTrains.getItemCount() > 0)
+			{
+				String t = (String)cbAllTrains.getSelectedItem();
+				cbAllTrains.removeItemAt(cbAllTrains.getSelectedIndex());
+				numberOfWagons.remove(t);
+				controller.deleteTrain(t);
+				cbAllTrains.removeAllItems();
+				for (Train train : controller.trains) {
+					cbAllTrains.addItem(train.getName());
+				}
+				repaint();
+				if ((String)cbAllTrains.getSelectedItem() != null)
+				{
+					currentTrain = cbAllTrains.getSelectedIndex();
+					tfCurrentTrain.setText("selected: " + (String)cbAllTrains.getSelectedItem());
+				}
+				else
+				{
+					currentTrain = 0;
+					tfCurrentTrain.setText("Selected: ");
+				}
+			}
 		}
 		else if (event.getSource() == btnAddWagon1)
 		{
-			//			currenttrain gebruiken en wagon 1 eraan toevoegen en tekenen
-
-			//			currentNumberOfWagons++;
-			//			drawWagon("Wagon1");
+			int wagonNumber = 1;
+			int seats = 10;
+			currentNumberOfWagons++;
+			controller.addWagon(wagonNumber, seats);
+			
+			if (cbAllTrains.getItemCount() > 0)
+			{
+				String selection = (String)cbAllTrains.getSelectedItem();
+				tfCurrentTrain.setText("Selected: " + selection);
+				controller.linkWagon(selection, wagonNumber);
+			}
 		}
 		else if (event.getSource() == btnAddWagon2)
 		{
-			//			currenttrain gebruiken en wagon 2 eraan toevoegen en tekenen
-
-			//			currentNumberOfWagons++;
-			//			drawWagon("Wagon2");
+			int wagonNumber = 2;
+			int seats = 20;
+			currentNumberOfWagons++;
+			controller.addWagon(wagonNumber, seats);
+			
+			if (cbAllTrains.getItemCount() > 0)
+			{
+				String selection = (String)cbAllTrains.getSelectedItem();
+				tfCurrentTrain.setText("Selected: " + selection);
+				controller.linkWagon(selection, wagonNumber);
+			}
 		}
 		else if (event.getSource() == jButton1)
 		{
-			//			currenttrain gebruiken en wagon 3 eraan toevoegen en tekenen
-
-			//			currentNumberOfWagons++;
-			//			drawWagon("Wagon3");
+			int wagonNumber = 3;
+			int seats = 30;
+			currentNumberOfWagons++;
+			controller.addWagon(wagonNumber, seats);
+			
+			if (cbAllTrains.getItemCount() > 0)
+			{
+				String selection = (String)cbAllTrains.getSelectedItem();
+				tfCurrentTrain.setText("Selected: " + selection);
+				controller.linkWagon(selection, wagonNumber);
+			}
 		}
 		else if (event.getSource() == btnDeleteWagon1)
 		{
-			//			currenttrain gebruiken en wagon 1 ervan verwijderen en dus weghalen uit tekenning
-
-			//			repaint(30+TRAINLENGTH,80+currentTrain*OFFSET,1,1);
+			int wagonNumber = 1;
+			currentNumberOfWagons--;			
+			if (cbAllTrains.getItemCount() > 0)
+			{
+				String selection = (String)cbAllTrains.getSelectedItem();
+				tfCurrentTrain.setText("Selected: " + selection);
+				controller.unlinkWagon(selection, wagonNumber);
+				controller.deleteWagon(wagonNumber);
+			}
 		}
-		//		currenttrain gebruiken en wagon 1 ervan verwijderen en dus weghalen uit tekenning
-
 		else if (event.getSource() == btnDeleteWagon2)
 		{
-			//			currenttrain gebruiken en wagon 2 ervan verwijderen en dus weghalen uit tekenning
-
-			//			repaint(30+TRAINLENGTH,80+currentTrain*OFFSET,1,1);		
+			int wagonNumber = 2;
+			currentNumberOfWagons--;			
+			if (cbAllTrains.getItemCount() > 0)
+			{
+				String selection = (String)cbAllTrains.getSelectedItem();
+				tfCurrentTrain.setText("Selected: " + selection);
+				controller.unlinkWagon(selection, wagonNumber);
+				controller.deleteWagon(wagonNumber);
+			}
 		}
 		else if (event.getSource() == btnDeleteWagon3)
 		{
-			String wagonID = "";
-			//			currenttrain gebruiken en wagon 3 ervan verwijderen en dus weghalen uit tekenning
-
-			//			repaint(30+TRAINLENGTH,80+currentTrain*OFFSET,1,1);		
-			eraseWagon(wagonID);
+			int wagonNumber = 3;
+			currentNumberOfWagons--;			
+			if (cbAllTrains.getItemCount() > 0)
+			{
+				String selection = (String)cbAllTrains.getSelectedItem();
+				tfCurrentTrain.setText("Selected: " + selection);
+				controller.unlinkWagon(selection, wagonNumber);
+				controller.deleteWagon(wagonNumber);
+			}
 		}
 
 	}
