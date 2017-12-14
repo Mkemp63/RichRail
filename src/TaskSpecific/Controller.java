@@ -12,11 +12,9 @@ public class Controller implements Observable {
 	public ArrayList<Train> trains = new ArrayList<Train>();
 	public ArrayList<Wagon> wagons = new ArrayList<Wagon>();
 	protected ArrayList<Logger> loggers;
-	Logger log1 = new LogWriter("LogFile", "log.rtf");
 
 	public Controller(){
 		this.loggers = new ArrayList<Logger>();
-		addLogger(log1);
 
 	}
 
