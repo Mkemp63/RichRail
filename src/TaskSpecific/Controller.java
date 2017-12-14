@@ -11,12 +11,6 @@ public class Controller implements Observable {
 	public ArrayList<Observer> observers = new ArrayList<Observer>();
 	public ArrayList<Train> trains = new ArrayList<Train>();
 	public ArrayList<Wagon> wagons = new ArrayList<Wagon>();
-	protected ArrayList<Logger> loggers;
-
-	public Controller(){
-		this.loggers = new ArrayList<Logger>();
-
-	}
 
 	public static Controller getInstance(){
 		if(instance == null)
@@ -264,25 +258,10 @@ public class Controller implements Observable {
 		}
 	}
 
-	public void addLogger(Logger logger) {
-
-		loggers.add(logger);
-	}
-
-	public void removeLogger(Logger logger) {
-		if(loggers.contains(logger)) {
-			loggers.remove(logger);
-		}
-	}
 
 	public ArrayList<String> getLogs(){
 		return logs;
 	}
-
-	public void setWriters(ArrayList<Logger> loggers) {
-		this.loggers = loggers;
-	}
-
 	public void addObserver(Observer o) {
 		observers.add(o);
 	}
