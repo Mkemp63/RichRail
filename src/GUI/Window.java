@@ -12,6 +12,7 @@ import java.awt.Insets;
 import java.awt.LayoutManager2;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.BorderFactory;
@@ -33,10 +34,12 @@ import Actions.*;
 
 
 
-public class Window extends javax.swing.JFrame implements ActionListener {
+public class Window extends javax.swing.JFrame implements ActionListener, Observer {
 	private static final long serialVersionUID = 1L;
 	
-	private Controller controller;
+	private Controller controller = Controller.getInstance();
+	private ArrayList<String> logs = new ArrayList<String>();
+
 
 	private JPanel jPanel1;
 	private JTextPane tpTextTrain;
@@ -82,6 +85,7 @@ public class Window extends javax.swing.JFrame implements ActionListener {
 		getContentPane().setLayout(layout);
 		pack();
 		setSize(800, 600);
+		this.setController(controller);
 		initCLIGUI();
 		
 	}
@@ -126,7 +130,14 @@ public class Window extends javax.swing.JFrame implements ActionListener {
 					taOutput.setBackground(Color.BLACK);
 					taOutput.setForeground(Color.WHITE);
 					taOutput.setEditable(false);
-					taOutput.setText("Dit is de output area");
+					
+					 logs.addAll(controller.getLogs());
+			           String s = "";
+			           for(String string: logs){
+			        	   s = string+ "\n" + s;
+			           }
+					
+					taOutput.setText(s);
 					taOutput.setSize(400, 200);
 					taOutput.setVisible(true);
 					taOutput.setLineWrap(true);
@@ -296,23 +307,22 @@ public class Window extends javax.swing.JFrame implements ActionListener {
 	}
 	
 	public void setController(Controller con){
- 		//Dit is nodig voor de Displayer
- 		this.controller = con;               
-        con.addObserver( this );
+ 		//Dit is nodig voor de Observer
+ 		this.controller = con;   
+ 		con.addObserver(this);
+        
  	} 
 
 	@Override
 	public void update(Observable subject) {
-		//Bij het toevoegen van een nieuwe command moet die aan deze lijst
-		//Toegevoegd worden
-		for(String string :controller.getLogs()){
-			if(!commandsString.contains(string)){
-				commandsString.add(string);
+		for(String log :controller.getLogs()){
+			if(!logs.contains(log)){
+				logs.add(log);
 			}
 		}
 		String s = "";
-		for(String string: commandsString){
-			s = s + string+ "\n";
+		for(String log: logs){
+			s = s + log+ "\n";
 		}
 		taOutput.setText(s);
 	}
@@ -502,6 +512,8 @@ public class Window extends javax.swing.JFrame implements ActionListener {
 	public void eraseWagon (String wagon) {
 		
 	}
+
+	
 
 }
 
