@@ -84,14 +84,9 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 		this.setController(controller);	
 		// initCLIGUI methode wordt aangeroepen en uitgevoerd
 		initCLIGUI();
-	}
+		logs.addAll(controller.getLogs());
 
-	// Een aantal treinen & wagons toevoegen.
-	private void fillTemporaryNewActions(){
-		controller.addTrain("sprinter");
-		controller.addWagon(8450, 25);
-		controller.addWagon(8550, 40);
-		controller.addWagon(8650, 25);
+
 	}
 	
 	// methode voor het initialiseren van de CLI GUI
@@ -139,12 +134,11 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 					taOutput.setEditable(false);
 
 					// methode om de logs te laten zien in de textarea
-					logs.addAll(controller.getLogs());
 					String s = "";
 					for(String string: logs){
 						s = string+ "\n" + s;
 					}
-
+										
 					taOutput.setText(s);
 					taOutput.setSize(400, 200);
 					taOutput.setVisible(true);
@@ -186,7 +180,7 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 		{
 			e.printStackTrace();
 		}
-		fillTemporaryNewActions();
+
 	}
 
 	// methode voor het initialiseren van de poorrail GUI,
@@ -568,4 +562,3 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 
 
 }
-
