@@ -31,6 +31,7 @@ import Actions.*;
 import Domain.Train;
 
 public class Window extends javax.swing.JFrame implements ActionListener, Observer {
+	// variabelen declareren
 	private static final long serialVersionUID = 1L;
 
 	private Controller controller = Controller.getInstance();
@@ -55,9 +56,7 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 	private JPanel drawPanel;
 	private JButton btnOtherWindow;
 
-	private JPanel jPanel3;
 	private JPanel jPanel4;
-	private JTextPane tpCommandInput;
 	private JTextField tfCommandLine;
 	private JTextArea taOverview;
 	private JTextArea taOutput;
@@ -82,16 +81,19 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 		getContentPane().setLayout(layout);
 		pack();
 		setSize(800, 600);
-		this.setController(controller);		
+		this.setController(controller);	
+		// initCLIGUI methode wordt aangeroepen en uitgevoerd
 		initCLIGUI();
 		logs.addAll(controller.getLogs());
 
 
 	}
 	
+	// methode voor het initialiseren van de CLI GUI
 	private void initCLIGUI() {
 		try
 		{
+			// grid rijen en kolommen worden gezet
 			this.setTitle("RichRail | Command Line");
 			GridBagLayout thisLayout = new GridBagLayout();
 			setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -106,6 +108,7 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 				GridBagLayout jPanel4Layout = new GridBagLayout();
 				//jPanel4.setLayout(null);
 				jPanel4.setLayout(jPanel4Layout);
+				// vanaf hier worden alle componenten aan het panel toegevoegd
 				getContentPane().add(jPanel4, new GridBagConstraints(0, 0, 4, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 				{
 					taOverview = new JTextArea ();
@@ -130,6 +133,7 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 					taOutput.setForeground(Color.WHITE);
 					taOutput.setEditable(false);
 
+					// methode om de logs te laten zien in de textarea
 					String s = "";
 					for(String string: logs){
 						s = string+ "\n" + s;
@@ -179,6 +183,8 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 
 	}
 
+	// methode voor het initialiseren van de poorrail GUI,
+	// aangepast naar behoefte
 	private void initGUI() {
 		try 
 		{
@@ -205,6 +211,7 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 				GridBagLayout jPanel2Layout = new GridBagLayout();
 				//jPanel2.setLayout(null);
 				jPanel2.setLayout(jPanel2Layout);
+				// componenten aan panel toevoegen
 				getContentPane().add(jPanel2, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 				{
 					tpTextTrain = new JTextPane();
@@ -266,6 +273,7 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 					btnOtherWindow.addActionListener(this);
 				}
 			}
+			// er wordt hier een nieuwe panel aan het bovenstaande panel toegevoegd
 			{
 				pnlWagons = new JPanel();
 				GridBagLayout jPanel3Layout = new GridBagLayout();
@@ -275,6 +283,7 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 				jPanel3Layout.columnWeights = new double[] {0.1, 0.1, 0.1, 0.1};
 				jPanel3Layout.columnWidths = new int[] {7, 7, 7, 7};
 				pnlWagons.setLayout(jPanel3Layout);
+				// hier worden weer de componenten toegevoegd aan het panel
 				pnlWagons.setBorder(BorderFactory.createEtchedBorder(BevelBorder.LOWERED));
 				{
 					tfCurrentTrain = new JTextField();
@@ -334,6 +343,7 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 
 	} 
 
+	// deze methode update de logs die je uiteindelijk in de textarea ziet
 	@Override
 	public void update(Observable subject) {
 		for(String log :controller.getLogs()){
@@ -348,6 +358,8 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 		taOutput.setText(s);
 	}
 
+	// hier worden alle button acties genomen en krijgen ze er een actie aan gehangen
+	// die wordt uitgevoerd als op de button geklikt wordt
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		Action cmdAdd = new ActionAdd();
