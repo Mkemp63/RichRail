@@ -1,15 +1,15 @@
 package GUI;
 
-
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.LayoutManager2;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.BorderFactory;
@@ -19,18 +19,24 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.WindowConstants;
 import javax.swing.border.BevelBorder;
 
+import TaskSpecific.*;
 import Actions.*;
+import Domain.Train;
 
-
-
-public class Window extends javax.swing.JFrame implements ActionListener {
+public class Window extends javax.swing.JFrame implements ActionListener, Observer {
+	// variabelen declareren
 	private static final long serialVersionUID = 1L;
-	
+
+	private Controller controller = Controller.getInstance();
+	private ArrayList<String> logs = new ArrayList<String>();
+
 	private JPanel jPanel1;
 	private JTextPane tpTextTrain;
 	private JButton btnDeleteWagon3;
@@ -48,7 +54,15 @@ public class Window extends javax.swing.JFrame implements ActionListener {
 	private JTextField tfNewTrain;
 	private JPanel jPanel2;
 	private JPanel drawPanel;
-	
+	private JButton btnOtherWindow;
+
+	private JPanel jPanel4;
+	private JTextField tfCommandLine;
+	private JTextArea taOverview;
+	private JTextArea taOutput;
+	private JButton btnExecute;
+	private JButton btnNewWindow;
+
 	private HashMap numberOfWagons;
 	private int currentNumberOfWagons;
 	private int currentTrain = -1;
@@ -67,10 +81,116 @@ public class Window extends javax.swing.JFrame implements ActionListener {
 		getContentPane().setLayout(layout);
 		pack();
 		setSize(800, 600);
-		initGUI();
-		
+		this.setController(controller);	
+		// initCLIGUI methode wordt aangeroepen en uitgevoerd
+		initCLIGUI();
+	}
+
+	// Een aantal treinen & wagons toevoegen.
+	private void fillTemporaryNewActions(){
+		controller.addTrain("sprinter");
+		controller.addWagon(8450, 25);
+		controller.addWagon(8550, 40);
+		controller.addWagon(8650, 25);
 	}
 	
+	// methode voor het initialiseren van de CLI GUI
+	private void initCLIGUI() {
+		try
+		{
+			// grid rijen en kolommen worden gezet
+			this.setTitle("RichRail | Command Line");
+			GridBagLayout thisLayout = new GridBagLayout();
+			setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+			thisLayout.rowWeights = new double[] {0.1, 0.1, 0.1, 0.1};
+			thisLayout.rowHeights = new int[] {7, 7, 7, 7};
+			thisLayout.columnWeights = new double[] {0.1, 0.1, 0.1, 0.1};
+			thisLayout.columnWidths = new int[] {7, 7, 7, 7};
+			getContentPane().setLayout(thisLayout);
+			{
+				GridBagConstraints c = new GridBagConstraints();
+				jPanel4 = new JPanel();
+				GridBagLayout jPanel4Layout = new GridBagLayout();
+				//jPanel4.setLayout(null);
+				jPanel4.setLayout(jPanel4Layout);
+				// vanaf hier worden alle componenten aan het panel toegevoegd
+				getContentPane().add(jPanel4, new GridBagConstraints(0, 0, 4, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+				{
+					taOverview = new JTextArea ();
+					taOverview.setPreferredSize(new Dimension(350, 400));
+					taOverview.setBackground(Color.WHITE);
+					taOverview.setForeground(Color.black);
+					taOverview.setEditable(false);
+					taOverview.setText("Dit is de overview area");
+					taOverview.setSize(400, 200);
+					taOverview.setVisible(true);
+					taOverview.setLineWrap(true);
+					JScrollPane scrollpane = new JScrollPane(taOverview);
+					c.gridy = 0;
+					c.gridx = 0;
+					c.gridwidth = 2;
+					jPanel4.add(scrollpane, c);
+				}
+				{
+					taOutput = new JTextArea ();
+					taOutput.setPreferredSize(new Dimension(350, 400));
+					taOutput.setBackground(Color.BLACK);
+					taOutput.setForeground(Color.WHITE);
+					taOutput.setEditable(false);
+
+					// methode om de logs te laten zien in de textarea
+					logs.addAll(controller.getLogs());
+					String s = "";
+					for(String string: logs){
+						s = string+ "\n" + s;
+					}
+
+					taOutput.setText(s);
+					taOutput.setSize(400, 200);
+					taOutput.setVisible(true);
+					taOutput.setLineWrap(true);
+					JScrollPane scrollpane1 = new JScrollPane(taOutput);
+					c.gridy = 0;
+					c.gridx = 2;
+					jPanel4.add(scrollpane1, c);
+				}
+				{
+					tfCommandLine = new JTextField(20);
+					c.gridy = 2;
+					c.gridx = 1;
+					tfCommandLine.setText("Command Line Input");
+					jPanel4.add(tfCommandLine, c);
+				}
+				{
+					btnExecute = new JButton();
+					c.gridy = 2;
+					c.gridx = 2;
+					jPanel4.add(btnExecute, c);
+					btnExecute.setText("Execute command");
+					btnExecute.addActionListener(this);
+				}
+				{
+					btnNewWindow = new JButton();
+					c.gridy = 3;
+					c.gridx= 0;
+					jPanel4.add(btnNewWindow, c);
+					btnNewWindow.setText("Open other window");
+					btnNewWindow.addActionListener(this);
+				}
+
+			}
+			pack();
+			setSize(800, 600);
+			numberOfWagons = new HashMap();
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		fillTemporaryNewActions();
+	}
+
+	// methode voor het initialiseren van de poorrail GUI,
+	// aangepast naar behoefte
 	private void initGUI() {
 		try 
 		{
@@ -97,6 +217,7 @@ public class Window extends javax.swing.JFrame implements ActionListener {
 				GridBagLayout jPanel2Layout = new GridBagLayout();
 				//jPanel2.setLayout(null);
 				jPanel2.setLayout(jPanel2Layout);
+				// componenten aan panel toevoegen
 				getContentPane().add(jPanel2, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 				{
 					tpTextTrain = new JTextPane();
@@ -106,7 +227,7 @@ public class Window extends javax.swing.JFrame implements ActionListener {
 					jPanel2Layout.rowHeights = new int[] {7, 7, 7, 7};
 					jPanel2Layout.columnWeights = new double[] {0.1, 0.1, 0.1, 0.1};
 					jPanel2Layout.columnWidths = new int[] {7, 7, 7, 7};
-					tpTextTrain.setText("train name:");
+					tpTextTrain.setText("Train name:");
 				}
 				{
 					tfNewTrain = new JTextField(20);
@@ -115,14 +236,22 @@ public class Window extends javax.swing.JFrame implements ActionListener {
 				{
 					btnNewTrain = new JButton();
 					jPanel2.add(btnNewTrain, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-					btnNewTrain.setText("execute");
+					btnNewTrain.setText("Make new train");
 					btnNewTrain.addActionListener(this);
 				}
 				{
-					ComboBoxModel cbAllTrainsModel = 
-						new DefaultComboBoxModel(
-								new String[] { });
-					cbAllTrains = new JComboBox();
+					DefaultComboBoxModel cbAllTrainsModel = new DefaultComboBoxModel();
+//					try {
+						Train[] trainArray = new Train[controller.trains.size()];
+						for (int i = 0; i < trainArray.length; i++) {
+							trainArray[i] = controller.trains.get(i);
+						}
+						cbAllTrains = new JComboBox(trainArray);
+//					}
+//					catch (NullPointerException e){
+//						e.printStackTrace();
+//						cbAllTrains = new JComboBox();
+//					}
 				/*	GridLayout cbAllTrainsLayout = new GridLayout(1, 1);
 					cbAllTrainsLayout.setColumns(1);
 					cbAllTrainsLayout.setHgap(5);
@@ -134,16 +263,23 @@ public class Window extends javax.swing.JFrame implements ActionListener {
 				{
 					btnChooseTrain = new JButton();
 					jPanel2.add(btnChooseTrain, new GridBagConstraints(2, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-					btnChooseTrain.setText("select train");
+					btnChooseTrain.setText("Select train");
 					btnChooseTrain.addActionListener(this);
 				}
 				{
 					btnDeleteTrain = new JButton();
 					jPanel2.add(btnDeleteTrain, new GridBagConstraints(2, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-					btnDeleteTrain.setText("delete train");
+					btnDeleteTrain.setText("Delete train");
 					btnDeleteTrain.addActionListener(this);
 				}
+				{
+					btnOtherWindow = new JButton();
+					jPanel2.add(btnOtherWindow, new GridBagConstraints(2, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+					btnOtherWindow.setText("Open CLI Window");
+					btnOtherWindow.addActionListener(this);
+				}
 			}
+			// er wordt hier een nieuwe panel aan het bovenstaande panel toegevoegd
 			{
 				pnlWagons = new JPanel();
 				GridBagLayout jPanel3Layout = new GridBagLayout();
@@ -153,46 +289,47 @@ public class Window extends javax.swing.JFrame implements ActionListener {
 				jPanel3Layout.columnWeights = new double[] {0.1, 0.1, 0.1, 0.1};
 				jPanel3Layout.columnWidths = new int[] {7, 7, 7, 7};
 				pnlWagons.setLayout(jPanel3Layout);
+				// hier worden weer de componenten toegevoegd aan het panel
 				pnlWagons.setBorder(BorderFactory.createEtchedBorder(BevelBorder.LOWERED));
 				{
 					tfCurrentTrain = new JTextField();
 					pnlWagons.add(tfCurrentTrain, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-					tfCurrentTrain.setText("selected: ");
+					tfCurrentTrain.setText("Selected: ");
 				}
 				{
 					btnAddWagon1 = new JButton();
 					pnlWagons.add(btnAddWagon1, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-					btnAddWagon1.setText("add wagon 1");
+					btnAddWagon1.setText("Add wagon 1");
 					btnAddWagon1.addActionListener(this);
 				}
 				{
 					btnAddWagon2 = new JButton();
 					pnlWagons.add(btnAddWagon2, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-					btnAddWagon2.setText("add wagon 2");
+					btnAddWagon2.setText("Add wagon 2");
 					btnAddWagon2.addActionListener(this);
 				}
 				{
 					jButton1 = new JButton();
 					pnlWagons.add(jButton1, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-					jButton1.setText("add wagon 3");
+					jButton1.setText("Add wagon 3");
 					jButton1.addActionListener(this);
 				}
 				{
 					btnDeleteWagon1 = new JButton();
 					pnlWagons.add(btnDeleteWagon1, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-					btnDeleteWagon1.setText("delete wagon 1");
+					btnDeleteWagon1.setText("Delete wagon 1");
 					btnDeleteWagon1.addActionListener(this);
 				}
 				{
 					btnDeleteWagon2 = new JButton();
 					pnlWagons.add(btnDeleteWagon2, new GridBagConstraints(2, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-					btnDeleteWagon2.setText("delete wagon 2");
+					btnDeleteWagon2.setText("Delete wagon 2");
 					btnDeleteWagon2.addActionListener(this);
 				}
 				{
 					btnDeleteWagon3 = new JButton();
 					pnlWagons.add(btnDeleteWagon3, new GridBagConstraints(2, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-					btnDeleteWagon3.setText("delete wagon 3");
+					btnDeleteWagon3.setText("Delete wagon 3");
 					btnDeleteWagon3.addActionListener(this);
 				}
 			}
@@ -204,7 +341,31 @@ public class Window extends javax.swing.JFrame implements ActionListener {
 			e.printStackTrace();
 		}
 	}
-	
+
+	public void setController(Controller con){
+		//Dit is nodig voor de Observer
+		this.controller = con;   
+		con.addObserver(this);
+
+	} 
+
+	// deze methode update de logs die je uiteindelijk in de textarea ziet
+	@Override
+	public void update(Observable subject) {
+		for(String log :controller.getLogs()){
+			if(!logs.contains(log)){
+				logs.add(log);
+			}
+		}
+		String s = "";
+		for(String log: logs){
+			s = s + log+ "\n";
+		}
+		taOutput.setText(s);
+	}
+
+	// hier worden alle button acties genomen en krijgen ze er een actie aan gehangen
+	// die wordt uitgevoerd als op de button geklikt wordt
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		Action cmdAdd = new ActionAdd();
@@ -214,10 +375,10 @@ public class Window extends javax.swing.JFrame implements ActionListener {
 		Action cmdGet = new ActionGet();
 		String firstWord;
 		
-		if (event.getSource()== btnNewTrain)
+		if (event.getSource()== btnExecute)
 		{
 			
-			String inputCommand = tfNewTrain.getText();
+			String inputCommand = tfCommandLine.getText();
 			String[] commands = inputCommand.split(" ");
 			firstWord = commands[0];
 			if (firstWord.equals("new")){
@@ -233,12 +394,7 @@ public class Window extends javax.swing.JFrame implements ActionListener {
 			}
 			else if(firstWord.equals("remove")){
 				cmdRemove.useAction(inputCommand);
-			}
-			else{
-				System.out.println("Unknown command");
-				JOptionPane.showMessageDialog(null, "Unknown command");
-			}
-
+		
 			tfNewTrain.setText("");
 			}
 			
@@ -254,103 +410,125 @@ public class Window extends javax.swing.JFrame implements ActionListener {
 //			}
 		
 		
-
+			tfCommandLine.setText("");
+		}
+		else if (event.getSource() == btnNewWindow) {
+			getContentPane().remove(jPanel4);
+			initGUI();
+		}
+		else if(event.getSource() == btnOtherWindow) {
+			getContentPane().remove(jPanel1);
+			getContentPane().remove(jPanel2);
+			getContentPane().remove(pnlWagons);
+			initCLIGUI();
+		}
+		else if (event.getSource() == btnNewTrain) {
+			String train = tfNewTrain.getText();
+			if (train != null && train.trim().length()>0)
+			{
+				if (controller.trainNotEquals(train)) {
+					controller.addTrain(train);
+					currentTrain = cbAllTrains.getSelectedIndex(); //TODO: hoe current train krijgen nu?
+					drawTrain(train);
+				}
+			}
+		}
 		else if (event.getSource() == btnChooseTrain)
 		{
-//			currentTrain veranderen om de wagon acties op uit te voeren
-//			de naam en de id dus halen uit de list en deze als variabelen opslaan
-//			vervolgens deze variabele gebruiken in de functies die op de wagons slaan
-//			Wanneer een trein al wagens heeft moeten deze dus getekend worden met juiste type etc
-			
-//			if (cbAllTrains.getItemCount() > 0)
-//			{
-//				String selection = (String)cbAllTrains.getSelectedItem();
-//				tfCurrentTrain.setText("selected: " + selection);
-//				int ti = cbAllTrains.getSelectedIndex();
-//				if (ti != currentTrain)
-//				{
-//					numberOfWagons.put(currentTrain, currentNumberOfWagons);
-//				}
-//				currentTrain = ti;
-//				try
-//				{
-//					currentNumberOfWagons = (Integer) numberOfWagons.get(currentTrain);
-//				}
-//				catch (Exception e)
-//				{
-//					currentNumberOfWagons = 0;
-//				}			
-//			}
+			//			currentTrain veranderen om de wagon acties op uit te voeren
+			//			de naam en de id dus halen uit de list en deze als variabelen opslaan
+			//			vervolgens deze variabele gebruiken in de functies die op de wagons slaan
+			//			Wanneer een trein al wagens heeft moeten deze dus getekend worden met juiste type etc
+
+			//			if (cbAllTrains.getItemCount() > 0)
+			//			{
+			//				String selection = (String)cbAllTrains.getSelectedItem();
+			//				tfCurrentTrain.setText("selected: " + selection);
+			//				int ti = cbAllTrains.getSelectedIndex();
+			//				if (ti != currentTrain)
+			//				{
+			//					numberOfWagons.put(currentTrain, currentNumberOfWagons);
+			//				}
+			//				currentTrain = ti;
+			//				try
+			//				{
+			//					currentNumberOfWagons = (Integer) numberOfWagons.get(currentTrain);
+			//				}
+			//				catch (Exception e)
+			//				{
+			//					currentNumberOfWagons = 0;
+			//				}			
+			//			}
 		}
 		else if (event.getSource() == btnDeleteTrain)
 		{
-//			currenttrain weer gebruiken en dan weghalen uit de list in de controller
-			
-			
-//			if (cbAllTrains.getItemCount() > 0)
-//			{
-//				String t = (String)cbAllTrains.getSelectedItem();
-//				cbAllTrains.removeItemAt(cbAllTrains.getSelectedIndex());
-//				numberOfWagons.remove(t);
-//				repaint();
-//				if ((String)cbAllTrains.getSelectedItem() != null)
-//				{
-//					currentTrain = cbAllTrains.getSelectedIndex();
-//					tfCurrentTrain.setText("selected: " + (String)cbAllTrains.getSelectedItem());
-//				}
-//				else
-//				{
-//					currentTrain = 0;
-//					tfCurrentTrain.setText("selected: ");
-//				}
-//			}
+			//			currenttrain weer gebruiken en dan weghalen uit de list in de controller
+
+
+			//			if (cbAllTrains.getItemCount() > 0)
+			//			{
+			//				String t = (String)cbAllTrains.getSelectedItem();
+			//				cbAllTrains.removeItemAt(cbAllTrains.getSelectedIndex());
+			//				numberOfWagons.remove(t);
+			//				repaint();
+			//				if ((String)cbAllTrains.getSelectedItem() != null)
+			//				{
+			//					currentTrain = cbAllTrains.getSelectedIndex();
+			//					tfCurrentTrain.setText("selected: " + (String)cbAllTrains.getSelectedItem());
+			//				}
+			//				else
+			//				{
+			//					currentTrain = 0;
+			//					tfCurrentTrain.setText("selected: ");
+			//				}
+			//			}
 		}
 		else if (event.getSource() == btnAddWagon1)
 		{
-//			currenttrain gebruiken en wagon 1 eraan toevoegen en tekenen
-			
-//			currentNumberOfWagons++;
-//			drawWagon("Wagon1");
+			//			currenttrain gebruiken en wagon 1 eraan toevoegen en tekenen
+
+			//			currentNumberOfWagons++;
+			//			drawWagon("Wagon1");
 		}
 		else if (event.getSource() == btnAddWagon2)
 		{
-//			currenttrain gebruiken en wagon 2 eraan toevoegen en tekenen
+			//			currenttrain gebruiken en wagon 2 eraan toevoegen en tekenen
 
-//			currentNumberOfWagons++;
-//			drawWagon("Wagon2");
+			//			currentNumberOfWagons++;
+			//			drawWagon("Wagon2");
 		}
 		else if (event.getSource() == jButton1)
 		{
-//			currenttrain gebruiken en wagon 3 eraan toevoegen en tekenen
+			//			currenttrain gebruiken en wagon 3 eraan toevoegen en tekenen
 
-//			currentNumberOfWagons++;
-//			drawWagon("Wagon3");
+			//			currentNumberOfWagons++;
+			//			drawWagon("Wagon3");
 		}
 		else if (event.getSource() == btnDeleteWagon1)
 		{
-//			currenttrain gebruiken en wagon 1 ervan verwijderen en dus weghalen uit tekenning
+			//			currenttrain gebruiken en wagon 1 ervan verwijderen en dus weghalen uit tekenning
 
-//			repaint(30+TRAINLENGTH,80+currentTrain*OFFSET,1,1);
+			//			repaint(30+TRAINLENGTH,80+currentTrain*OFFSET,1,1);
 		}
-//		currenttrain gebruiken en wagon 1 ervan verwijderen en dus weghalen uit tekenning
+		//		currenttrain gebruiken en wagon 1 ervan verwijderen en dus weghalen uit tekenning
 
 		else if (event.getSource() == btnDeleteWagon2)
 		{
-//			currenttrain gebruiken en wagon 2 ervan verwijderen en dus weghalen uit tekenning
+			//			currenttrain gebruiken en wagon 2 ervan verwijderen en dus weghalen uit tekenning
 
-//			repaint(30+TRAINLENGTH,80+currentTrain*OFFSET,1,1);		
+			//			repaint(30+TRAINLENGTH,80+currentTrain*OFFSET,1,1);		
 		}
 		else if (event.getSource() == btnDeleteWagon3)
 		{
 			String wagonID = "";
-//			currenttrain gebruiken en wagon 3 ervan verwijderen en dus weghalen uit tekenning
+			//			currenttrain gebruiken en wagon 3 ervan verwijderen en dus weghalen uit tekenning
 
-//			repaint(30+TRAINLENGTH,80+currentTrain*OFFSET,1,1);		
+			//			repaint(30+TRAINLENGTH,80+currentTrain*OFFSET,1,1);		
 			eraseWagon(wagonID);
 		}
-		
+
 	}
-	
+
 	public void drawTrain (String train) 
 	{
 		if (train != "")
@@ -366,8 +544,8 @@ public class Window extends javax.swing.JFrame implements ActionListener {
 			g.fillRoundRect(80, 120+currentTrain*OFFSET, 20, 20, 20, 20);
 			g.drawString(train,40,105+currentTrain*OFFSET);
 		}
-    }
-	
+	}
+
 	public void drawWagon (String wagon) 
 	{
 		Graphics g = drawPanel.getGraphics();
@@ -377,15 +555,17 @@ public class Window extends javax.swing.JFrame implements ActionListener {
 		g.fillRoundRect(35+currentNumberOfWagons*TRAINLENGTH, 120+currentTrain*OFFSET, 20, 20, 20, 20);
 		g.fillRoundRect(80+currentNumberOfWagons*TRAINLENGTH, 120+currentTrain*OFFSET, 20, 20, 20, 20);
 		g.drawString(wagon,40+currentNumberOfWagons*TRAINLENGTH,105+currentTrain*OFFSET);
-    }
-	
+	}
+
 	public void eraseTrain (String train) {
-		
+
 	}
-	
+
 	public void eraseWagon (String wagon) {
-		
+
 	}
+
+
 
 }
 

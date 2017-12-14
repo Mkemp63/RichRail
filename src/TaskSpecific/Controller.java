@@ -12,11 +12,12 @@ public class Controller implements Observable {
 	public ArrayList<Train> trains = new ArrayList<Train>();
 	public ArrayList<Wagon> wagons = new ArrayList<Wagon>();
 	protected ArrayList<Logger> loggers;
-	Logger log = new LogWriter("LogFile", "log.txt");
+	Logger log1 = new LogWriter("LogFile", "log.rtf");
 
 	public Controller(){
 		this.loggers = new ArrayList<Logger>();
-		addLogger(log);
+		addLogger(log1);
+
 	}
 
 	public static Controller getInstance(){
@@ -107,6 +108,8 @@ public class Controller implements Observable {
 						b = true;
 						t.removeWagon(w);
 						logs.add("Wagon "+wagon+" unlinked from train "+ train);
+						System.out.println("Wagon "+wagon+" unlinked from train "+ train);
+
 						notifyObservers();
 					}
 				}
@@ -114,15 +117,22 @@ public class Controller implements Observable {
 		}
 		if(!b){
 			logs.add("Wagon "+wagon+" not unlinked from train "+ train);
+			System.out.println("Wagon "+wagon+" not unlinked from train "+ train);
 			notifyObservers();
 		}
 	}
 
 	public void notifyObservers() {
-		Iterator<Observer> oi = observers.iterator();
-		while( oi.hasNext() ) {
-			Observer ob = (Observer) oi.next();
-			ob.update( this );
+
+		if(observers.size() == 0) {
+			System.out.println("Er zijn nog geen observers");
+		} else {
+			Iterator<Observer> oi = observers.iterator();
+			while( oi.hasNext() ) {
+				Observer ob = (Observer) oi.next();
+				ob.update( this );
+				System.out.println("notified observers");
+			}
 		}
 	}
 
@@ -267,15 +277,14 @@ public class Controller implements Observable {
 		}
 	}
 
-	public ArrayList<Logger> getLogs(){
-		return loggers;
+	public ArrayList<String> getLogs(){
+		return logs;
 	}
 
 	public void setWriters(ArrayList<Logger> loggers) {
 		this.loggers = loggers;
 	}
 
-	@Override
 	public void addObserver(Observer o) {
 		observers.add(o);
 	}

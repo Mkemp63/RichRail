@@ -1,8 +1,8 @@
 package Actions;
 
 public class ActionAdd extends Action {
-	private String nameTrain;
-	private int idWagon;
+	private String trainName;
+	private int wagonID;
 
 	@Override
 	public void useAction(String input) {
@@ -11,14 +11,22 @@ public class ActionAdd extends Action {
 		try {
 			String[] commands = input.split(" ");
 			if (commands.length == 4) {
-				nameTrain = commands[3];
-				idWagon = Integer.parseInt(commands[1]);
-				cont.linkWagon(nameTrain, idWagon);
+				trainName = commands[3];
+				wagonID = Integer.parseInt(commands[1]);
+				cont.linkWagon(trainName, wagonID);
 			} else {
 				System.out.println("Unknown command");
 			}
 		} catch(Exception e){
-			System.out.println("Unknown command");
+			String[] commands = input.split(" ");
+			if (commands.length == 4) {
+
+				trainName = commands[3];
+				wagonID = Integer.parseInt(commands[1]);
+				cont.linkWagon(trainName, wagonID);
+			} else {
+				System.out.println("Unknown command");
+			}
 		}
 	}
 }

@@ -13,7 +13,7 @@ public class ActionNew extends Action{
 	@Override
 	public void useAction(String input) {
 		System.out.println(input);
-		try {
+//		try {
 		String[] commands = input.split(" ");
 		type = commands[1];
 		System.out.println(commands[1]);
@@ -23,9 +23,8 @@ public class ActionNew extends Action{
 
 			} else if(type.equals("wagon") && commands.length == 3){
 				idWagon = Integer.parseInt(commands[2]);
-				if (commands.length <= 3) { 
-					cont.addWagon(idWagon, 20);
-				} else if (commands.length == 5) {
+				cont.addWagon(idWagon, 20);
+				if (commands.length == 5) {
 					numSeats =  Integer.parseInt(commands[4]);
 					cont.addWagon(idWagon, numSeats);
 				}
@@ -33,8 +32,8 @@ public class ActionNew extends Action{
 			else {
 				System.out.println("Unknown command");
 			}
-		} catch(Exception e){
-			System.out.println("Unknown command");
-		}
+//		} catch(Exception e){
+//			System.out.println("Unknown command");
+//		}
 	}
 }

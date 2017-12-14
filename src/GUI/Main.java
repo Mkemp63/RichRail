@@ -11,7 +11,8 @@ public class Main {
 		{
 			public void run() 
 			{
-				Window w = new Window("RichRail");				
+				Window w = new Window("RichRail");	
+				
 				w.setLocationRelativeTo(null);
 				w.setVisible(true);
 			}

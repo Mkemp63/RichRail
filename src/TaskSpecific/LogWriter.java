@@ -10,7 +10,7 @@ public class LogWriter extends Logger{
 		super(nm);
 		this.filePath = fp;
 	}
-
+	
 	@Override
 	public boolean log() {
 		try {
@@ -23,5 +23,12 @@ public class LogWriter extends Logger{
 		}
 	}
 	
+	public String getFilePath() {
+		return filePath;
+	}
+
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
 	
 }
