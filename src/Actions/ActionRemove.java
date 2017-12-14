@@ -23,7 +23,6 @@ public class ActionRemove extends Action{
 				System.out.println("Unknown command");
 			}
 		} catch(Exception e){
-			JOptionPane.showMessageDialog(null, "command not correct");
 			System.out.println("Unknown command");
 		}
 	}
