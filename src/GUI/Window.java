@@ -29,6 +29,7 @@ import javax.swing.border.BevelBorder;
 import TaskSpecific.*;
 import Actions.*;
 import Domain.Train;
+import Domain.Wagon;
 
 public class Window extends javax.swing.JFrame implements ActionListener, Observer {
 	// variabelen declareren
@@ -346,6 +347,32 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 	// deze methode update de logs die je uiteindelijk in de textarea ziet
 	@Override
 	public void update(Observable subject) {
+		String overviewString = "";
+
+		//Overview Area train update:
+		taOverview.setText(overviewString);
+		taOverview.setText(taOverview.getText() + "Trains: \n");
+		for (Train tr : controller.trains){
+			overviewString = overviewString + "(" + tr.getName() + ")";
+			for (Wagon w : tr.getWagons()){
+				overviewString = overviewString + "-(" + w.getID() + ")";
+			}
+			overviewString = overviewString + "\n";
+		}
+		taOverview.setText(taOverview.getText() +overviewString);
+
+		overviewString = "";
+		//Overview Area wagon update:
+		taOverview.setText(taOverview.getText() + "Wagons: \n");
+		for (Wagon w : controller.wagons){
+			overviewString = overviewString + "(" + w.getID() + ")";
+		}
+		taOverview.setText(taOverview.getText() +overviewString);
+		overviewString = "";
+
+
+
+		//Log update:
 		for(String log :controller.getLogs()){
 			if(!logs.contains(log)){
 				logs.add(log);
@@ -371,6 +398,7 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 
 		if (event.getSource()== btnExecute)
 		{
+<<<<<<< HEAD
 			String inputCommand = tfCommandLine.getText();
 			if (inputCommand != null && inputCommand.length() > 0 && inputCommand.charAt(inputCommand.length() - 1) == ';') {
 				inputCommand = inputCommand.substring(0, inputCommand.length() - 1);
@@ -398,6 +426,27 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 			}else {
 				JOptionPane.showMessageDialog(null, "command not correct");
 				System.out.println("geen ;");
+=======
+
+			String inputCommand = tfCommandLine.getText();
+			String[] commands = inputCommand.split(" ");
+			firstWord = commands[0];
+			if (firstWord.equals("new")){
+				cmdNew.useAction(inputCommand);
+			} else if(firstWord.equals("add")){
+				cmdAdd.useAction(inputCommand);
+			}
+			else if(firstWord.equals("delete")){
+				cmdDelete.useAction(inputCommand);
+			}
+			else if(firstWord.equals("getnumseats")){
+				cmdGet.useAction(inputCommand);
+			}
+			else if(firstWord.equals("remove")){
+				cmdRemove.useAction(inputCommand);
+
+				tfNewTrain.setText("");
+>>>>>>> origin/master
 			}
 
 			//			if train does not exist in list alltrains
@@ -566,7 +615,5 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 	public void eraseWagon (String wagon) {
 
 	}
-
-
 
 }
