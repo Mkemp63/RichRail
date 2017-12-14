@@ -36,7 +36,7 @@ import Actions.*;
 
 public class Window extends javax.swing.JFrame implements ActionListener, Observer {
 	private static final long serialVersionUID = 1L;
-	
+
 	private Controller controller = Controller.getInstance();
 	private ArrayList<String> logs = new ArrayList<String>();
 
@@ -86,8 +86,16 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 		pack();
 		setSize(800, 600);
 		this.setController(controller);
-		initCLIGUI();
 		
+		initCLIGUI();
+
+	}
+
+	private void fillTemporaryNewCommans(){
+		controller.addTrain("sprinter");
+		controller.addWagon(8450, 25);
+		controller.addWagon(8550, 40);
+		controller.addWagon(8650, 25);
 	}
 	
 	private void initCLIGUI() {
@@ -100,6 +108,7 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 			thisLayout.rowHeights = new int[] {7, 7, 7, 7};
 			thisLayout.columnWeights = new double[] {0.1, 0.1, 0.1, 0.1};
 			thisLayout.columnWidths = new int[] {7, 7, 7, 7};
+
 			getContentPane().setLayout(thisLayout);
 			{
 				GridBagConstraints c = new GridBagConstraints();
@@ -130,13 +139,13 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 					taOutput.setBackground(Color.BLACK);
 					taOutput.setForeground(Color.WHITE);
 					taOutput.setEditable(false);
-					
-					 logs.addAll(controller.getLogs());
-			           String s = "";
-			           for(String string: logs){
-			        	   s = string+ "\n" + s;
-			           }
-					
+
+					logs.addAll(controller.getLogs());
+					String s = "";
+					for(String string: logs){
+						s = string+ "\n" + s;
+					}
+
 					taOutput.setText(s);
 					taOutput.setSize(400, 200);
 					taOutput.setVisible(true);
@@ -161,8 +170,8 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 					btnExecute.setText("Execute command");
 					btnExecute.addActionListener(this);
 				}
-					
-				}
+
+			}
 			pack();
 			setSize(800, 600);
 			numberOfWagons = new HashMap();
@@ -170,8 +179,10 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 		{
 			e.printStackTrace();
 		}
+		fillTemporaryNewCommans();
+
 	}
-	
+
 	private void initGUI() {
 		try 
 		{
@@ -221,10 +232,10 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 				}
 				{
 					ComboBoxModel cbAllTrainsModel = 
-						new DefaultComboBoxModel(
-								new String[] { });
+							new DefaultComboBoxModel(
+									new String[] { });
 					cbAllTrains = new JComboBox();
-				/*	GridLayout cbAllTrainsLayout = new GridLayout(1, 1);
+					/*	GridLayout cbAllTrainsLayout = new GridLayout(1, 1);
 					cbAllTrainsLayout.setColumns(1);
 					cbAllTrainsLayout.setHgap(5);
 					//cbAllTrainsLayout.setVgap(5);
@@ -305,13 +316,13 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void setController(Controller con){
- 		//Dit is nodig voor de Observer
- 		this.controller = con;   
- 		con.addObserver(this);
-        
- 	} 
+		//Dit is nodig voor de Observer
+		this.controller = con;   
+		con.addObserver(this);
+
+	} 
 
 	@Override
 	public void update(Observable subject) {
@@ -326,7 +337,7 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 		}
 		taOutput.setText(s);
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		Action cmdAdd = new ActionAdd();
@@ -335,12 +346,12 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 		Action cmdNew = new ActionNew();
 		Action cmdGet = new ActionGet();
 		int firstInstanceOfSpaces;
-		
+
 		if (event.getSource()== btnExecute)
 		{
-			
+
 			String inputCommand = tfCommandLine.getText();
-			 
+
 			firstInstanceOfSpaces = inputCommand.indexOf(" ", 0);
 			if(firstInstanceOfSpaces >= 0){//kijken of wel een spatie inzit om het eerste woord er uit te halen
 				if (inputCommand.substring(0, firstInstanceOfSpaces).equals("new")){
@@ -369,114 +380,114 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 			}
 			tfCommandLine.setText("");
 		}
-			
-//			if train does not exist in list alltrains
-//			dan toevoegen en tekenen
-//			TODO: het bovenstaande en dus toevoegen vanuit controller klasse
-			
-//			if (train != null && train.trim().length()>0)
-//			{
-//				train = addTrain(train); // TODO: Vanuit actie klasse de juiste action aanroepen
-//				currentTrain = cbAllTrains.getSelectedIndex();
-//				drawTrain(train);
-//			}		
+
+		//			if train does not exist in list alltrains
+		//			dan toevoegen en tekenen
+		//			TODO: het bovenstaande en dus toevoegen vanuit controller klasse
+
+		//			if (train != null && train.trim().length()>0)
+		//			{
+		//				train = addTrain(train); // TODO: Vanuit actie klasse de juiste action aanroepen
+		//				currentTrain = cbAllTrains.getSelectedIndex();
+		//				drawTrain(train);
+		//			}		
 
 		else if (event.getSource() == btnChooseTrain)
 		{
-//			currentTrain veranderen om de wagon acties op uit te voeren
-//			de naam en de id dus halen uit de list en deze als variabelen opslaan
-//			vervolgens deze variabele gebruiken in de functies die op de wagons slaan
-//			Wanneer een trein al wagens heeft moeten deze dus getekend worden met juiste type etc
-			
-//			if (cbAllTrains.getItemCount() > 0)
-//			{
-//				String selection = (String)cbAllTrains.getSelectedItem();
-//				tfCurrentTrain.setText("selected: " + selection);
-//				int ti = cbAllTrains.getSelectedIndex();
-//				if (ti != currentTrain)
-//				{
-//					numberOfWagons.put(currentTrain, currentNumberOfWagons);
-//				}
-//				currentTrain = ti;
-//				try
-//				{
-//					currentNumberOfWagons = (Integer) numberOfWagons.get(currentTrain);
-//				}
-//				catch (Exception e)
-//				{
-//					currentNumberOfWagons = 0;
-//				}			
-//			}
+			//			currentTrain veranderen om de wagon acties op uit te voeren
+			//			de naam en de id dus halen uit de list en deze als variabelen opslaan
+			//			vervolgens deze variabele gebruiken in de functies die op de wagons slaan
+			//			Wanneer een trein al wagens heeft moeten deze dus getekend worden met juiste type etc
+
+			//			if (cbAllTrains.getItemCount() > 0)
+			//			{
+			//				String selection = (String)cbAllTrains.getSelectedItem();
+			//				tfCurrentTrain.setText("selected: " + selection);
+			//				int ti = cbAllTrains.getSelectedIndex();
+			//				if (ti != currentTrain)
+			//				{
+			//					numberOfWagons.put(currentTrain, currentNumberOfWagons);
+			//				}
+			//				currentTrain = ti;
+			//				try
+			//				{
+			//					currentNumberOfWagons = (Integer) numberOfWagons.get(currentTrain);
+			//				}
+			//				catch (Exception e)
+			//				{
+			//					currentNumberOfWagons = 0;
+			//				}			
+			//			}
 		}
 		else if (event.getSource() == btnDeleteTrain)
 		{
-//			currenttrain weer gebruiken en dan weghalen uit de list in de controller
-			
-			
-//			if (cbAllTrains.getItemCount() > 0)
-//			{
-//				String t = (String)cbAllTrains.getSelectedItem();
-//				cbAllTrains.removeItemAt(cbAllTrains.getSelectedIndex());
-//				numberOfWagons.remove(t);
-//				repaint();
-//				if ((String)cbAllTrains.getSelectedItem() != null)
-//				{
-//					currentTrain = cbAllTrains.getSelectedIndex();
-//					tfCurrentTrain.setText("selected: " + (String)cbAllTrains.getSelectedItem());
-//				}
-//				else
-//				{
-//					currentTrain = 0;
-//					tfCurrentTrain.setText("selected: ");
-//				}
-//			}
+			//			currenttrain weer gebruiken en dan weghalen uit de list in de controller
+
+
+			//			if (cbAllTrains.getItemCount() > 0)
+			//			{
+			//				String t = (String)cbAllTrains.getSelectedItem();
+			//				cbAllTrains.removeItemAt(cbAllTrains.getSelectedIndex());
+			//				numberOfWagons.remove(t);
+			//				repaint();
+			//				if ((String)cbAllTrains.getSelectedItem() != null)
+			//				{
+			//					currentTrain = cbAllTrains.getSelectedIndex();
+			//					tfCurrentTrain.setText("selected: " + (String)cbAllTrains.getSelectedItem());
+			//				}
+			//				else
+			//				{
+			//					currentTrain = 0;
+			//					tfCurrentTrain.setText("selected: ");
+			//				}
+			//			}
 		}
 		else if (event.getSource() == btnAddWagon1)
 		{
-//			currenttrain gebruiken en wagon 1 eraan toevoegen en tekenen
-			
-//			currentNumberOfWagons++;
-//			drawWagon("Wagon1");
+			//			currenttrain gebruiken en wagon 1 eraan toevoegen en tekenen
+
+			//			currentNumberOfWagons++;
+			//			drawWagon("Wagon1");
 		}
 		else if (event.getSource() == btnAddWagon2)
 		{
-//			currenttrain gebruiken en wagon 2 eraan toevoegen en tekenen
+			//			currenttrain gebruiken en wagon 2 eraan toevoegen en tekenen
 
-//			currentNumberOfWagons++;
-//			drawWagon("Wagon2");
+			//			currentNumberOfWagons++;
+			//			drawWagon("Wagon2");
 		}
 		else if (event.getSource() == jButton1)
 		{
-//			currenttrain gebruiken en wagon 3 eraan toevoegen en tekenen
+			//			currenttrain gebruiken en wagon 3 eraan toevoegen en tekenen
 
-//			currentNumberOfWagons++;
-//			drawWagon("Wagon3");
+			//			currentNumberOfWagons++;
+			//			drawWagon("Wagon3");
 		}
 		else if (event.getSource() == btnDeleteWagon1)
 		{
-//			currenttrain gebruiken en wagon 1 ervan verwijderen en dus weghalen uit tekenning
+			//			currenttrain gebruiken en wagon 1 ervan verwijderen en dus weghalen uit tekenning
 
-//			repaint(30+TRAINLENGTH,80+currentTrain*OFFSET,1,1);
+			//			repaint(30+TRAINLENGTH,80+currentTrain*OFFSET,1,1);
 		}
-//		currenttrain gebruiken en wagon 1 ervan verwijderen en dus weghalen uit tekenning
+		//		currenttrain gebruiken en wagon 1 ervan verwijderen en dus weghalen uit tekenning
 
 		else if (event.getSource() == btnDeleteWagon2)
 		{
-//			currenttrain gebruiken en wagon 2 ervan verwijderen en dus weghalen uit tekenning
+			//			currenttrain gebruiken en wagon 2 ervan verwijderen en dus weghalen uit tekenning
 
-//			repaint(30+TRAINLENGTH,80+currentTrain*OFFSET,1,1);		
+			//			repaint(30+TRAINLENGTH,80+currentTrain*OFFSET,1,1);		
 		}
 		else if (event.getSource() == btnDeleteWagon3)
 		{
 			String wagonID = "";
-//			currenttrain gebruiken en wagon 3 ervan verwijderen en dus weghalen uit tekenning
+			//			currenttrain gebruiken en wagon 3 ervan verwijderen en dus weghalen uit tekenning
 
-//			repaint(30+TRAINLENGTH,80+currentTrain*OFFSET,1,1);		
+			//			repaint(30+TRAINLENGTH,80+currentTrain*OFFSET,1,1);		
 			eraseWagon(wagonID);
 		}
-		
+
 	}
-	
+
 	public void drawTrain (String train) 
 	{
 		if (train != "")
@@ -492,8 +503,8 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 			g.fillRoundRect(80, 120+currentTrain*OFFSET, 20, 20, 20, 20);
 			g.drawString(train,40,105+currentTrain*OFFSET);
 		}
-    }
-	
+	}
+
 	public void drawWagon (String wagon) 
 	{
 		Graphics g = drawPanel.getGraphics();
@@ -503,17 +514,17 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 		g.fillRoundRect(35+currentNumberOfWagons*TRAINLENGTH, 120+currentTrain*OFFSET, 20, 20, 20, 20);
 		g.fillRoundRect(80+currentNumberOfWagons*TRAINLENGTH, 120+currentTrain*OFFSET, 20, 20, 20, 20);
 		g.drawString(wagon,40+currentNumberOfWagons*TRAINLENGTH,105+currentTrain*OFFSET);
-    }
-	
-	public void eraseTrain (String train) {
-		
-	}
-	
-	public void eraseWagon (String wagon) {
-		
 	}
 
-	
+	public void eraseTrain (String train) {
+
+	}
+
+	public void eraseWagon (String wagon) {
+
+	}
+
+
 
 }
 
