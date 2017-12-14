@@ -88,7 +88,7 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 
 
 	}
-	
+
 	// methode voor het initialiseren van de CLI GUI
 	private void initCLIGUI() {
 		try
@@ -138,7 +138,7 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 					for(String string: logs){
 						s = string+ "\n" + s;
 					}
-										
+
 					taOutput.setText(s);
 					taOutput.setSize(400, 200);
 					taOutput.setVisible(true);
@@ -235,18 +235,18 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 				}
 				{
 					DefaultComboBoxModel cbAllTrainsModel = new DefaultComboBoxModel();
-//					try {
-						Train[] trainArray = new Train[controller.trains.size()];
-						for (int i = 0; i < trainArray.length; i++) {
-							trainArray[i] = controller.trains.get(i);
-						}
-						cbAllTrains = new JComboBox(trainArray);
-//					}
-//					catch (NullPointerException e){
-//						e.printStackTrace();
-//						cbAllTrains = new JComboBox();
-//					}
-				/*	GridLayout cbAllTrainsLayout = new GridLayout(1, 1);
+					//					try {
+					Train[] trainArray = new Train[controller.trains.size()];
+					for (int i = 0; i < trainArray.length; i++) {
+						trainArray[i] = controller.trains.get(i);
+					}
+					cbAllTrains = new JComboBox(trainArray);
+					//					}
+					//					catch (NullPointerException e){
+					//						e.printStackTrace();
+					//						cbAllTrains = new JComboBox();
+					//					}
+					/*	GridLayout cbAllTrainsLayout = new GridLayout(1, 1);
 					cbAllTrainsLayout.setColumns(1);
 					cbAllTrainsLayout.setHgap(5);
 					//cbAllTrainsLayout.setVgap(5);
@@ -368,42 +368,50 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 		Action cmdNew = new ActionNew();
 		Action cmdGet = new ActionGet();
 		String firstWord;
-		
+
 		if (event.getSource()== btnExecute)
 		{
-			
 			String inputCommand = tfCommandLine.getText();
-			String[] commands = inputCommand.split(" ");
-			firstWord = commands[0];
-			if (firstWord.equals("new")){
-				cmdNew.useAction(inputCommand);
-			} else if(firstWord.equals("add")){
-				cmdAdd.useAction(inputCommand);
+			if (inputCommand != null && inputCommand.length() > 0 && inputCommand.charAt(inputCommand.length() - 1) == ';') {
+				inputCommand = inputCommand.substring(0, inputCommand.length() - 1);
+				String[] commands = inputCommand.split(" ");
+				firstWord = commands[0];
+				if (firstWord.equals("new")){
+					cmdNew.useAction(inputCommand);
+				} else if(firstWord.equals("add")){
+					cmdAdd.useAction(inputCommand);
+				}
+				else if(firstWord.equals("delete")){
+					cmdDelete.useAction(inputCommand);
+				}
+				else if(firstWord.equals("getnumseats")){
+					cmdGet.useAction(inputCommand);
+				}
+				else if(firstWord.equals("remove")){
+					cmdRemove.useAction(inputCommand);
+
+					tfCommandLine.setText("");
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "command not correct");
+				}
+			}else {
+				JOptionPane.showMessageDialog(null, "command not correct");
+				System.out.println("geen ;");
 			}
-			else if(firstWord.equals("delete")){
-				cmdDelete.useAction(inputCommand);
-			}
-			else if(firstWord.equals("getnumseats")){
-				cmdGet.useAction(inputCommand);
-			}
-			else if(firstWord.equals("remove")){
-				cmdRemove.useAction(inputCommand);
-		
-			tfNewTrain.setText("");
-			}
-			
-//			if train does not exist in list alltrains
-//			dan toevoegen en tekenen
-//			TODO: het bovenstaande en dus toevoegen vanuit controller klasse
-			
-//			if (train != null && train.trim().length()>0)
-//			{
-//				train = addTrain(train); // TODO: Vanuit actie klasse de juiste action aanroepen
-//				currentTrain = cbAllTrains.getSelectedIndex();
-//				drawTrain(train);
-//			}
-		
-		
+
+			//			if train does not exist in list alltrains
+			//			dan toevoegen en tekenen
+			//			TODO: het bovenstaande en dus toevoegen vanuit controller klasse
+
+			//			if (train != null && train.trim().length()>0)
+			//			{
+			//				train = addTrain(train); // TODO: Vanuit actie klasse de juiste action aanroepen
+			//				currentTrain = cbAllTrains.getSelectedIndex();
+			//				drawTrain(train);
+			//			}
+
+
 			tfCommandLine.setText("");
 		}
 		else if (event.getSource() == btnNewWindow) {

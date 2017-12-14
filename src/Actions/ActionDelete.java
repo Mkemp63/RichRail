@@ -1,5 +1,7 @@
 package Actions;
 
+import javax.swing.JOptionPane;
+
 public class ActionDelete extends Action {
 
 	private String name;
@@ -21,7 +23,7 @@ public class ActionDelete extends Action {
 				cont.deleteWagon(idWagon);
 			}
 			else{
-
+				JOptionPane.showMessageDialog(null, "command not correct");
 				System.out.println("Unknown command");
 			}
 		} catch(Exception e){
