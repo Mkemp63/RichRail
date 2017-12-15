@@ -41,13 +41,7 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 
 	private JPanel jPanel1;
 	private JTextPane tpTextTrain;
-	private JButton btnDeleteWagon3;
-	private JButton btnDeleteWagon2;
-	private JButton btnDeleteWagon1;
-	private JButton jButton1;
 	private JPanel pnlWagons;
-	private JButton btnAddWagon2;
-	private JButton btnAddWagon1;
 	private JTextField tfCurrentTrain;
 	private JButton btnDeleteTrain;
 	private JButton btnChooseTrain;
@@ -76,6 +70,7 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 	private JButton btnUnlinkWagon;
 	private JTextPane tpSeats;
 	private JTextField tfSeats;
+	private JTextArea taVisualOutput;
 	
 	private JButton btnOpenNewWindow;
 
@@ -88,24 +83,22 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 
 	public Window(String title) {
 		super();
-		this.setTitle(title);
-		GridBagLayout layout = new GridBagLayout();
-		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		layout.rowWeights = new double[] {0.1, 0.1, 0.1, 0.1};
-		layout.rowHeights = new int[] {7, 7, 7, 7};
-		layout.columnWeights = new double[] {0.1, 0.1, 0.1, 0.1};
-		layout.columnWidths = new int[] {7, 7, 7, 7};
-		getContentPane().setLayout(layout);
-		pack();
-		setSize(800, 600);
-		this.setController(controller);	
-		// initCLIGUI methode wordt aangeroepen en uitgevoerd
-		initCLIGUI();
-		logs.addAll(controller.getLogs());
-
-
+//		this.setTitle(title);
+//		this.setController(controller);	
+//		logs.addAll(controller.getLogs());
+//		
+//		// initCLIGUI methode wordt aangeroepen en uitgevoerd
+//		initCLIGUI();
+		makeWindow();
 	}
 
+	public void makeWindow() {
+		this.setTitle("Test");
+		this.setController(controller);
+		logs.addAll(controller.getLogs());
+		initCLIGUI();
+	}
+	
 	// methode voor het initialiseren van de CLI GUI
 	private void initCLIGUI() {
 		try
@@ -176,7 +169,7 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 					btnExecute = new JButton();
 					c.gridy = 3;
 					c.gridx = 1;
-					jPanel4.add(btnExecute, c);
+					jPanel4.add(btnExecute, c); 
 					btnExecute.setText("Execute command");
 					btnExecute.addActionListener(this);
 				}
@@ -185,7 +178,7 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 					c.gridy = 2;
 					c.gridx= 2;
 					jPanel4.add(btnNewWindow, c);
-					btnNewWindow.setText("Open other window");
+					btnNewWindow.setText("Open visual window");
 					btnNewWindow.addActionListener(this);
 				}
 				{
@@ -222,13 +215,33 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 			thisLayout.columnWidths = new int[] {7, 7, 7, 7};
 			getContentPane().setLayout(thisLayout);
 			{
+				GridBagConstraints c = new GridBagConstraints();
 				jPanel1 = new JPanel();
 				jPanel1.setLayout(new BorderLayout());
-				getContentPane().add(jPanel1, new GridBagConstraints(0, 0, 4, 2, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+				getContentPane().add(jPanel1, new GridBagConstraints(0, 0, 4, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 				{
-					drawPanel = new JPanel();
-					drawPanel.setBackground(Color.WHITE);
-					jPanel1.add(drawPanel,BorderLayout.CENTER);
+					taVisualOutput = new JTextArea ();
+					taVisualOutput.setPreferredSize(new Dimension(350, 400));
+					taVisualOutput.setBackground(Color.BLACK);
+					taVisualOutput.setForeground(Color.WHITE);
+					taVisualOutput.setEditable(false);
+
+					// methode om de logs te laten zien in de textarea
+					String s = "";
+					for(String string: logs){
+						s = string+ "\n" + s;
+					}
+
+					taVisualOutput.setText(s);
+					taVisualOutput.setSize(400, 200);
+					taVisualOutput.setVisible(true);
+					taVisualOutput.setLineWrap(true);
+					c.gridy = 0;
+					c.gridx = 0;
+					c.gridwidth = 4;
+					c.gridheight = 2;
+					JScrollPane scrollpane1 = new JScrollPane(taVisualOutput);
+					jPanel1.add(scrollpane1,BorderLayout.CENTER);
 				}
 			}
 			{
@@ -238,7 +251,7 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 				//jPanel2.setLayout(null);
 				jPanel2.setLayout(jPanel2Layout);
 				// componenten aan panel toevoegen
-				getContentPane().add(jPanel2, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+				getContentPane().add(jPanel2, new GridBagConstraints(0, 1, 2, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 				{
 					tpTextTrain = new JTextPane();
 					gbc.gridwidth = 1;
@@ -263,7 +276,7 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 					gbc.gridx = 2;
 					gbc.gridwidth = 1;
 					gbc.gridheight = 1;
-					jPanel2.add(btnNewTrain, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+					jPanel2.add(btnNewTrain, gbc);
 					btnNewTrain.setText("Make new train");
 					btnNewTrain.addActionListener(this);
 				}
@@ -390,7 +403,7 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 			{	GridBagConstraints gbc = new GridBagConstraints();
 				pnlWagons = new JPanel();
 				GridBagLayout jPanel3Layout = new GridBagLayout();
-				getContentPane().add(pnlWagons, new GridBagConstraints(1, 2, 2, 3, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+				getContentPane().add(pnlWagons, new GridBagConstraints(1, 2, 1, 3, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 				jPanel3Layout.rowWeights = new double[] {0.1, 0.1, 0.1, 0.1};
 				jPanel3Layout.rowHeights = new int[] {7, 7, 7, 7};
 				jPanel3Layout.columnWeights = new double[] {0.1, 0.1, 0.1, 0.1};
@@ -541,7 +554,6 @@ public class Window extends javax.swing.JFrame implements ActionListener, Observ
 			initGUI();
 		}
 		else if (event.getSource() == btnOpenNewWindow) {
-			new Window("RichRail2");
 		}
 		else if(event.getSource() == btnOtherWindow) {
 			getContentPane().remove(jPanel1);
