@@ -34,10 +34,11 @@ import Domain.Wagon;
 public class Window extends javax.swing.JFrame implements ActionListener, Observer {
 	// variabelen declareren
 	private static final long serialVersionUID = 1L;
-
+ 
 	private Controller controller = Controller.getInstance();
 	private ArrayList<String> logs = new ArrayList<String>();
-	
+	private LogWriter lw = LogWriter.getInstance();
+
 
 	private JPanel jPanel1;
 	private JTextPane tpTextTrain;
